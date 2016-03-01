@@ -17,9 +17,14 @@ typedef NS_ENUM(NSInteger, TalkCellContentType) {
     TalkCellContentTypeVideo
 };
 
+typedef NS_ENUM(NSInteger, TalkCellType) {
+    TalkCellTypeReceived,
+    TalkCellTypeSend
+};
 
 @interface TalkCell : UITableViewCell
 @property (nonatomic) TalkCellContentType contentType;
+@property (nonatomic) TalkCellType cellType;
 
 @property (nonatomic, strong) UIImageView *vBubble;
 @property (nonatomic, strong) UIView *vContent;

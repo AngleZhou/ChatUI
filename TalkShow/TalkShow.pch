@@ -17,5 +17,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa.h>
+#import "TSTools.h"
 
 #endif /* TalkShow_pch */

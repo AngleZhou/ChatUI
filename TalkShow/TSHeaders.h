@@ -10,4 +10,5 @@
 #define TSHeaders_h
 
 #import "ViewUtils.h"
+#import "NSString+Size.h"
 #endif /* TSHeaders_h */

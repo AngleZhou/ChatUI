@@ -12,6 +12,7 @@
 #import "TalkReceivedCell.h"
 #import "TSDateTimeCell.h"
 #import "TSSave.h"
+#import "TSMultiInputView.h"
 #import <AVFoundation/AVFoundation.h>
 
 #import <Masonry.h>
@@ -30,6 +31,7 @@
 @property (nonatomic, strong) UILabel *btnKeyboard;
 //@property (nonatomic, strong) UILabel *btnAdd;
 @property (nonatomic, strong) UIButton *btnAdd;
+@property (nonatomic, strong) TSMultiInputView *inputPlugInView;
 
 @property (nonatomic, strong) NSMutableArray *talks;
 @end
@@ -75,6 +77,9 @@
 //        make.size.mas_equalTo(CGSizeMake(24, 24));
     }];
     
+    self.inputPlugInView = [[TSMultiInputView alloc] init];
+    [self.view addSubview:self.inputPlugInView];
+    
     self.btnAdd = [[UIButton alloc] init];
     [self.btnAdd setBackgroundImage:[UIImage imageNamed:@"chat_setmode_add_btn_normal"] forState:UIControlStateNormal];
     [self.toolBar addSubview:self.btnAdd];
@@ -85,10 +90,11 @@
     }];
     [[[self.btnAdd rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
         //多种输入的选择view
+        [wSelf showPlugInView];
     }];
     
     
-    self.btnKeyboard = iconfontLabel(@"\U0000e602", 24);
+    self.btnKeyboard = [TSTools iconfontLabel:@"\U0000e602" size:24];
     self.btnKeyboard.hidden = YES;
     self.btnKeyboard.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapk = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyboardToggled)];
@@ -167,6 +173,22 @@
     self.textView.selectable = YES;
 }
 
+
+#pragma mark - Action
+
+- (void)showPlugInView {
+    self.textView.editable = NO;
+    ______WS();
+    [UIView animateWithDuration:0.5 animations:^{
+        wSelf.inputPlugInView.top = kTSScreenHeight - wSelf.inputPlugInView.height;
+        wSelf.toolBar.top = kTSScreenHeight - wSelf.inputPlugInView.height - wSelf.toolBar.height;
+    } completion:^(BOOL finished) {
+        [wSelf.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
+        }];
+    }];
+    
+}
 
 #pragma mark - TSTextView
 - (void)TSTextViewAddAudio:(NSURL *)audioPath {
