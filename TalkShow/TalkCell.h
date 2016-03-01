@@ -10,28 +10,23 @@
 #import "TPMessageBubble.h"
 #import "UIImage+TPMessgeBubble.h"
 
-typedef NS_ENUM(NSInteger, TalkCellContentType) {
-    TalkCellContentTypeText,
-    TalkCellContentTypeAudio,
-    TalkCellContentTypeImage,
-    TalkCellContentTypeVideo
-};
 
 typedef NS_ENUM(NSInteger, TalkCellType) {
     TalkCellTypeReceived,
     TalkCellTypeSend
 };
 
+
 @interface TalkCell : UITableViewCell
-@property (nonatomic) TalkCellContentType contentType;
+//@property (nonatomic) NSString *talkCellContentType;
 @property (nonatomic) TalkCellType cellType;
 
 @property (nonatomic, strong) UIImageView *vBubble;
-@property (nonatomic, strong) UIView *vContent;
-@property (nonatomic, strong) TPMessageBubbleImage *msgBubbleImage;
-@property (nonatomic, strong) UILabel *lblVoiceLength;
-@property (nonatomic, strong) UIImageView *vSound;
+- (instancetype)initWithType:(TalkCellType)type reuseIdentifier:(NSString *)reuseIdentifier;
 
-@property (nonatomic, strong) NSString *text;
-@property (nonatomic, strong) NSURL *fileUrl;
+
+
+
+
+
 @end

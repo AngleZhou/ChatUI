@@ -15,6 +15,8 @@
 #define kTSBubbleTextXMargin 10
 #define kTSBubbleTextYMargin 5
 
+#define TalkCellMaxWidth kTSScreenWidth*2/3
+
 #define kTSInputPluginTextColor [UIColor grayColor]
 
 #define kTSInputPluginCellWidth 57
@@ -36,5 +38,11 @@ static NSString *SENDCELL = @"SendCell";
 static NSString *RECEIVECELL = @"ReceiveCell";
 static NSString *TIMECELL = @"TimeCell";
 static NSString *VOICECELL = @"VoiceCell";
+
+
+static NSString *TalkCellContentTypeText = @"TalkCellContentTypeText";
+static NSString *TalkCellContentTypeAudio = @"TalkCellContentTypeAudio";
+static NSString *TalkCellContentTypeImage = @"TalkCellContentTypeImage";
+static NSString *TalkCellContentTypeVideo = @"TalkCellContentTypeVideo";
 
 #endif /* Constant_h */

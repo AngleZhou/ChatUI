@@ -30,6 +30,8 @@
 		B2BFB5ED1C72BF54000B6C82 /* TalkShowUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5EC1C72BF54000B6C82 /* TalkShowUITests.m */; };
 		B2BFB5FC1C72D4E6000B6C82 /* TalkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5FB1C72D4E6000B6C82 /* TalkCell.m */; };
 		B2EFB9F81C8574260022CA81 /* TSImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9F71C8574260022CA81 /* TSImagePicker.m */; };
+		B2EFB9FC1C85B6990022CA81 /* TSTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9FB1C85B6990022CA81 /* TSTextCell.m */; };
+		B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9FE1C85C19E0022CA81 /* TSVoiceCell.m */; };
 		B2FFB9561C73046800F67FF7 /* NSString+Size.m in Sources */ = {isa = PBXBuildFile; fileRef = B2FFB9551C73046800F67FF7 /* NSString+Size.m */; };
 		B2FFB95C1C744EDD00F67FF7 /* TSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2FFB95B1C744EDD00F67FF7 /* TSTextView.m */; };
 		B2FFB95E1C74547900F67FF7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2FFB95D1C74547900F67FF7 /* AVFoundation.framework */; };
@@ -103,6 +105,10 @@
 		B2BFB5FB1C72D4E6000B6C82 /* TalkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalkCell.m; sourceTree = "<group>"; };
 		B2EFB9F61C8574260022CA81 /* TSImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSImagePicker.h; path = InputView/TSImagePicker.h; sourceTree = "<group>"; };
 		B2EFB9F71C8574260022CA81 /* TSImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSImagePicker.m; path = InputView/TSImagePicker.m; sourceTree = "<group>"; };
+		B2EFB9FA1C85B6990022CA81 /* TSTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSTextCell.h; path = TalkCells/TSTextCell.h; sourceTree = "<group>"; };
+		B2EFB9FB1C85B6990022CA81 /* TSTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSTextCell.m; path = TalkCells/TSTextCell.m; sourceTree = "<group>"; };
+		B2EFB9FD1C85C19E0022CA81 /* TSVoiceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSVoiceCell.h; path = TalkCells/TSVoiceCell.h; sourceTree = "<group>"; };
+		B2EFB9FE1C85C19E0022CA81 /* TSVoiceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSVoiceCell.m; path = TalkCells/TSVoiceCell.m; sourceTree = "<group>"; };
 		B2FFB9511C72FE7300F67FF7 /* TalkShow.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TalkShow.pch; sourceTree = "<group>"; };
 		B2FFB9521C72FE7D00F67FF7 /* TalkShowConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TalkShowConstant.h; sourceTree = "<group>"; };
 		B2FFB9541C73046800F67FF7 /* NSString+Size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Size.h"; path = "Category/NSString+Size.h"; sourceTree = "<group>"; };
@@ -167,6 +173,10 @@
 				B24FAEAD1C76F1CE00B8F523 /* TalkReceivedCell.m */,
 				B2FFB9651C74990100F67FF7 /* TSDateTimeCell.h */,
 				B2FFB9661C74990100F67FF7 /* TSDateTimeCell.m */,
+				B2EFB9FA1C85B6990022CA81 /* TSTextCell.h */,
+				B2EFB9FB1C85B6990022CA81 /* TSTextCell.m */,
+				B2EFB9FD1C85C19E0022CA81 /* TSVoiceCell.h */,
+				B2EFB9FE1C85C19E0022CA81 /* TSVoiceCell.m */,
 			);
 			name = TalkCells;
 			sourceTree = "<group>";
@@ -504,12 +514,14 @@
 				B23801A91C803B1D000A60A5 /* TSTools.m in Sources */,
 				B24FAEAE1C76F1CE00B8F523 /* TalkReceivedCell.m in Sources */,
 				B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */,
+				B2EFB9FC1C85B6990022CA81 /* TSTextCell.m in Sources */,
 				B2FFB96A1C74A75600F67FF7 /* ViewUtils.m in Sources */,
 				B2FFB96E1C756E8D00F67FF7 /* TPMessageBubble.m in Sources */,
 				B2BFB5CF1C72BF54000B6C82 /* ViewController.m in Sources */,
 				B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */,
 				B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */,
 				B2BFB5FC1C72D4E6000B6C82 /* TalkCell.m in Sources */,
+				B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */,
 				B2FFB9611C745F0B00F67FF7 /* TSSave.m in Sources */,
 				B2FFB95C1C744EDD00F67FF7 /* TSTextView.m in Sources */,
 				B2BFB5CC1C72BF54000B6C82 /* AppDelegate.m in Sources */,

@@ -23,13 +23,7 @@
             make.size.mas_equalTo(CGSizeMake(20, 20));
         }];
         
-        self.msgBubbleImage = [msgBubble tpMsgReceivedBubble];
-        self.vBubble.image = self.msgBubbleImage.image;
-        [self.vBubble mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(wSelf).with.offset(kTSSideX);
-            make.trailing.equalTo(wSelf.vContent).with.offset(kTSBubbleTextXMargin);
-            make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
-        }];
+        
         [self.lblVoiceLength mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.equalTo(wSelf.vBubble.mas_trailing).with.offset(kTSBubbleTextXMargin/2);
             make.centerY.equalTo(wSelf.vBubble).with.offset(4);

@@ -14,7 +14,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        TPMessageBubble *msgBubble = [[TPMessageBubble alloc] init];
+        
         
         ______WS();
         [self.vContent mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -24,14 +24,7 @@
             make.size.mas_equalTo(CGSizeMake(20, 20));
         }];
         
-        self.msgBubbleImage = [msgBubble tpMsgSendBubble];
-        self.vBubble.image = self.msgBubbleImage.image;
-        [self.vBubble mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.equalTo(wSelf).with.offset(-kTSSideX);
-            make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
-            
-            make.leading.equalTo(wSelf.vContent).with.offset(-kTSBubbleTextXMargin);
-        }];
+        
         
         [self.lblVoiceLength mas_makeConstraints:^(MASConstraintMaker *make) {
             make.trailing.equalTo(wSelf.vBubble.mas_leading).with.offset(-kTSBubbleTextXMargin/2);
