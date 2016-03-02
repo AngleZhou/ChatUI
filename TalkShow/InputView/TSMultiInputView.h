@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSImagePicker.h"
 
 @interface TSMultiInputView : UIView
 

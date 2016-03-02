@@ -27,9 +27,7 @@
     album.action = ^{
         imagePicker.sourceType = TSImagePickerTypeAlbum;
         [imagePicker showImagePicker];
-        imagePicker.handlerBlock = ^(UIImage *image) {
-            
-        };
+        
     };
     [plugins addObject:album];
     

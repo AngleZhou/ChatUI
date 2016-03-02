@@ -47,6 +47,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initUI];
+    [TSImagePicker sharedInstance].delegate = self;
 }
 
 - (void)initUI {
@@ -301,6 +302,7 @@
                     cell = [[TSImageCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeImage];
                 }
                 cell.fileUrl = url;
+                return cell;
             }
             return nil;
         }

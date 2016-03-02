@@ -56,7 +56,7 @@ static NSInteger imageCount = 0;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:audioDirectory isDirectory:&isDir];
     if (!exists) {
         /* file note exists, create */
-        [self createDirectory:@"audio" atFilePath:documentDirectory];
+        [self createDirectory:fileType atFilePath:documentDirectory];
     }
     
     NSString *filePath = [NSString stringWithFormat:@"%@/%@", audioDirectory, fileName];
@@ -81,9 +81,10 @@ static NSInteger imageCount = 0;
         NSString * filePath = [self filePathWithFileName:name fileType:fileType];
         
         // 用这个方法来判断当前的文件是否存在，如果不存在，就创建一个文件
-        if (![manager fileExistsAtPath:filePath]) {
-            [manager createFileAtPath:filePath contents:data attributes:nil];
-        }
+//        if (![manager fileExistsAtPath:filePath]) {
+//            [manager createFileAtPath:filePath contents:data attributes:nil];
+//        }
+        [manager createFileAtPath:filePath contents:data attributes:nil];
         
     });
     

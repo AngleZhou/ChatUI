@@ -17,6 +17,7 @@
 
 #define kTSTalkCellMaxWidth kTSScreenWidth*2/3
 
+#define kTSAvataWidth 32
 
 #define kTSInputPluginCellWidth 57
 

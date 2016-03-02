@@ -18,6 +18,7 @@
 		B299CE651C869B87002672CA /* TSImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE641C869B87002672CA /* TSImageCell.m */; };
 		B299CE6A1C869BB0002672CA /* TalkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE671C869BB0002672CA /* TalkCell.m */; };
 		B299CE6B1C869BB0002672CA /* TSDateTimeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE691C869BB0002672CA /* TSDateTimeCell.m */; };
+		B299CE6E1C86CE80002672CA /* UIImage+ThumbImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE6D1C86CE80002672CA /* UIImage+ThumbImage.m */; };
 		B2A167741C75754B00B899B8 /* UIImage+TPMessgeBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A167731C75754B00B899B8 /* UIImage+TPMessgeBubble.m */; };
 		B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A167771C75C19700B899B8 /* NSDate+MessgeCellDescription.m */; };
 		B2BFB5C91C72BF54000B6C82 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5C81C72BF54000B6C82 /* main.m */; };
@@ -78,6 +79,8 @@
 		B299CE671C869BB0002672CA /* TalkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TalkCell.m; path = TalkCells/TalkCell.m; sourceTree = "<group>"; };
 		B299CE681C869BB0002672CA /* TSDateTimeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSDateTimeCell.h; path = TalkCells/TSDateTimeCell.h; sourceTree = "<group>"; };
 		B299CE691C869BB0002672CA /* TSDateTimeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSDateTimeCell.m; path = TalkCells/TSDateTimeCell.m; sourceTree = "<group>"; };
+		B299CE6C1C86CE80002672CA /* UIImage+ThumbImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ThumbImage.h"; path = "Category/UIImage+ThumbImage.h"; sourceTree = "<group>"; };
+		B299CE6D1C86CE80002672CA /* UIImage+ThumbImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ThumbImage.m"; path = "Category/UIImage+ThumbImage.m"; sourceTree = "<group>"; };
 		B2A167721C75754B00B899B8 /* UIImage+TPMessgeBubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+TPMessgeBubble.h"; path = "TPMessageBubble/UIImage+TPMessgeBubble.h"; sourceTree = "<group>"; };
 		B2A167731C75754B00B899B8 /* UIImage+TPMessgeBubble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+TPMessgeBubble.m"; path = "TPMessageBubble/UIImage+TPMessgeBubble.m"; sourceTree = "<group>"; };
 		B2A167751C75B9F200B899B8 /* TSHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSHeaders.h; sourceTree = "<group>"; };
@@ -225,11 +228,9 @@
 				B2FFB95B1C744EDD00F67FF7 /* TSToolbarTextView.m */,
 				B2FFB95F1C745F0B00F67FF7 /* TSSave.h */,
 				B2FFB9601C745F0B00F67FF7 /* TSSave.m */,
-				B2FFB9681C74A75600F67FF7 /* ViewUtils.h */,
-				B2FFB9691C74A75600F67FF7 /* ViewUtils.m */,
+				B2FFB9521C72FE7D00F67FF7 /* TalkShowConstant.h */,
 				B2A167751C75B9F200B899B8 /* TSHeaders.h */,
 				B2FFB9511C72FE7300F67FF7 /* TalkShow.pch */,
-				B2FFB9521C72FE7D00F67FF7 /* TalkShowConstant.h */,
 				B2BFB5D01C72BF54000B6C82 /* Main.storyboard */,
 				B24FAEAF1C773CBC00B8F523 /* Emoji.plist */,
 				B2BFB5D31C72BF54000B6C82 /* Assets.xcassets */,
@@ -278,10 +279,14 @@
 		B2FFB9531C73045800F67FF7 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				B2FFB9681C74A75600F67FF7 /* ViewUtils.h */,
+				B2FFB9691C74A75600F67FF7 /* ViewUtils.m */,
 				B2FFB9541C73046800F67FF7 /* NSString+Size.h */,
 				B2FFB9551C73046800F67FF7 /* NSString+Size.m */,
 				B2A167761C75C19700B899B8 /* NSDate+MessgeCellDescription.h */,
 				B2A167771C75C19700B899B8 /* NSDate+MessgeCellDescription.m */,
+				B299CE6C1C86CE80002672CA /* UIImage+ThumbImage.h */,
+				B299CE6D1C86CE80002672CA /* UIImage+ThumbImage.m */,
 				B23801A71C803B1D000A60A5 /* TSTools.h */,
 				B23801A81C803B1D000A60A5 /* TSTools.m */,
 			);
@@ -521,6 +526,7 @@
 				B2FFB9561C73046800F67FF7 /* NSString+Size.m in Sources */,
 				B24FAEA71C76EDD100B8F523 /* UIColor+DarkerLighter.m in Sources */,
 				B2EFB9F81C8574260022CA81 /* TSImagePicker.m in Sources */,
+				B299CE6E1C86CE80002672CA /* UIImage+ThumbImage.m in Sources */,
 				B2A167741C75754B00B899B8 /* UIImage+TPMessgeBubble.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
