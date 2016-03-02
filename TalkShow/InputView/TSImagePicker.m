@@ -41,8 +41,12 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *image = info[UIImagePickerControllerEditedImage];
+    
     if (self.handlerBlock) {
         self.handlerBlock(image);
+    }
+    if ([self.delegate respondsToSelector:@selector(TSImagePicker:didFinishedPickingImage:)]) {
+        [self.delegate TSImagePicker:self didFinishedPickingImage:image];
     }
 }
 @end

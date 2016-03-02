@@ -38,13 +38,13 @@ static NSInteger audioCount = 0;
         self.backgroundColor = TouchUpColor;
         self.text = @"按住 说话";
         [self.recorder stop];
-        [self.delegatets TSTextViewAddAudio:[TSSave fileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+        [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
     }
 }
 
 - (void)initAudio {
     audioCount++;
-    NSURL *fileUrl = [TSSave fileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
+    NSURL *fileUrl = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
     
     AVAudioSession *session = [AVAudioSession sharedInstance];
 //    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];

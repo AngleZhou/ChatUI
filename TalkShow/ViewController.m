@@ -13,7 +13,9 @@
 #import "TalkCell.h"
 #import "TSTextCell.h"
 #import "TSVoiceCell.h"
+#import "TSImageCell.h"
 #import "TSMultiInputView.h"
+#import "TSImagePicker.h"
 #import <AVFoundation/AVFoundation.h>
 
 #import <Masonry.h>
@@ -23,7 +25,7 @@
 #define messageFontSize 17
 
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
 @property (nonatomic, strong) TSToolbarTextView *textView;
@@ -196,7 +198,11 @@
     [self addDataToTableView:audioPath];
 }
 
-
+#pragma mark - TSImagePicker
+- (void)TSImagePicker:(TSImagePicker *)imagePicker didFinishedPickingImage:(UIImage *)image {
+    NSURL *imgPath = [TSSave saveImage:image];
+    [self addDataToTableView:imgPath];
+}
 
 #pragma mark - UITextView Delegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -277,12 +283,26 @@
             return cell;
         }
         if ([item isKindOfClass:[NSURL class]]) {
-            TSVoiceCell *cell = (TSVoiceCell *)[tableView dequeueReusableCellWithIdentifier:TalkCellContentTypeAudio];
-            if (!cell) {
-                cell = [[TSVoiceCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeAudio];
+            //
+            NSURL *url = item;
+            NSString *fileName = [url.pathComponents lastObject];
+            if ([fileName containsString:@".m4a"]) {
+                TSVoiceCell *cell = (TSVoiceCell *)[tableView dequeueReusableCellWithIdentifier:TalkCellContentTypeAudio];
+                if (!cell) {
+                    cell = [[TSVoiceCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeAudio];
+                }
+                cell.fileUrl = url;
+                return cell;
             }
-            cell.fileUrl = (NSURL *)item;
-            return cell;
+            
+            if ([fileName containsString:@".jpg"]) {
+                TSImageCell *cell = (TSImageCell *)[tableView dequeueReusableCellWithIdentifier:TalkCellContentTypeImage];
+                if (!cell) {
+                    cell = [[TSImageCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeImage];
+                }
+                cell.fileUrl = url;
+            }
+            return nil;
         }
   
     }

@@ -9,5 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface TSSave : NSObject
-+ (NSURL *)fileUrlWithFileName:(NSString *)fileName;
++ (NSURL *)audioFileUrlWithFileName:(NSString *)fileName;
++ (NSURL *)imageFileUrlWithFileName:(NSString *)fileName;
+
++ (NSURL *)saveImage:(UIImage *)image;
 @end

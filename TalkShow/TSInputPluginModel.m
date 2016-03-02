@@ -8,6 +8,7 @@
 
 #import "TSInputPluginModel.h"
 #import "TSImagePicker.h"
+#import "TSSave.h"
 
 @implementation TSInputPluginItem
 
@@ -26,6 +27,9 @@
     album.action = ^{
         imagePicker.sourceType = TSImagePickerTypeAlbum;
         [imagePicker showImagePicker];
+        imagePicker.handlerBlock = ^(UIImage *image) {
+            
+        };
     };
     [plugins addObject:album];
     

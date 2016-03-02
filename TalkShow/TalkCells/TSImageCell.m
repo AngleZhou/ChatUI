@@ -20,6 +20,7 @@
 
 - (void)setFileUrl:(NSURL *)fileUrl {
     _fileUrl = fileUrl;
-    self.vBubble.image = [UIImage imageWithContentsOfFile:fileUrl.path];
+    UIImage *image = [UIImage imageWithContentsOfFile:fileUrl.path];
+    
 }
 @end
