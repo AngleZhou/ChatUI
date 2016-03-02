@@ -13,14 +13,14 @@
 #define kTSSideX 8
 #define kTSBubbleHeight 40
 #define kTSBubbleTextXMargin 10
-#define kTSBubbleTextYMargin 5
+#define kTSBubbleTextYMargin 12
 
-#define TalkCellMaxWidth kTSScreenWidth*2/3
+#define kTSTalkCellMaxWidth kTSScreenWidth*2/3
 
-#define kTSInputPluginTextColor [UIColor grayColor]
 
 #define kTSInputPluginCellWidth 57
 
+#define kTSInputPluginTextColor [UIColor grayColor]
 #define kTSInputPluginViewBGColor [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
 #define kTSInputPluginCellFont [UIFont systemFontOfSize:13]
 
@@ -32,6 +32,7 @@
 #define ______SS() __weak __typeof(&*wSelf) sSelf = wSelf
 #define ______WX(x,y) __weak __typeof(&*x) y = x
 
+#define kTSMainFont [UIFont systemFontOfSize:15]
 
 
 static NSString *SENDCELL = @"SendCell";

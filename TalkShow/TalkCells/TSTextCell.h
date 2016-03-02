@@ -9,5 +9,5 @@
 #import "TalkCell.h"
 
 @interface TSTextCell : TalkCell
-@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString *content;
 @end

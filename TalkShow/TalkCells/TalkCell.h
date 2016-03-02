@@ -18,15 +18,12 @@ typedef NS_ENUM(NSInteger, TalkCellType) {
 
 
 @interface TalkCell : UITableViewCell
-//@property (nonatomic) NSString *talkCellContentType;
+@property (nonatomic) NSString *contentType;
 @property (nonatomic) TalkCellType cellType;
 
 @property (nonatomic, strong) UIImageView *vBubble;
-- (instancetype)initWithType:(TalkCellType)type reuseIdentifier:(NSString *)reuseIdentifier;
+@property (nonatomic, strong) TPMessageBubbleImage *msgBubbleImage;
 
-
-
-
-
+- (instancetype)initWithType:(TalkCellType)type talkCellContentType:(NSString *)talkCellContentType;
 
 @end

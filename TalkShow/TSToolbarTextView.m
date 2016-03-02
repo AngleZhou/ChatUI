@@ -6,7 +6,7 @@
 //  Copyright © 2016年 ZhouQian. All rights reserved.
 //
 
-#import "TSTextView.h"
+#import "TSToolbarTextView.h"
 #import "TSSave.h"
 #import <AVFoundation/AVFoundation.h>
 
@@ -14,13 +14,13 @@
 #define TouchDownColor [UIColor grayColor]
 #define TouchUpColor [UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:0.1]
 
-@interface TSTextView () <AVAudioRecorderDelegate>
+@interface TSToolbarTextView () <AVAudioRecorderDelegate>
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @end
 
 
 
-@implementation TSTextView
+@implementation TSToolbarTextView
 
 static NSInteger audioCount = 0;
 

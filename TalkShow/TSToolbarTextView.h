@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, TSTextViewState) {
 - (void)TSTextViewAddAudio:(NSURL *)audioPath;
 @end
 
-@interface TSTextView : UITextView
+@interface TSToolbarTextView : UITextView
 @property (nonatomic) TSTextViewState tsState;
 
 @property (nonatomic, weak) id<TSTextViewDelegate> delegatets;

@@ -9,28 +9,60 @@
 #import "TSVoiceCell.h"
 #import <AVFoundation/AVFoundation.h>
 
+#define MaxAudioCellWidth 150
+#define MinAudioCellWidth 40
+#define MinCellHeight 34
+
 @interface TSVoiceCell () <AVAudioPlayerDelegate>
-@property (nonatomic, strong) UILabel *lblVoiceLength;
-@property (nonatomic, strong) UIImageView *vSound;
-@property (nonatomic) NSTimeInterval audioLength;
-@property (nonatomic, strong) AVAudioPlayer *player;
+@property (nonatomic, strong) UILabel        *lblVoiceLength;
+@property (nonatomic, strong) UIImageView    *vSound;
+@property (nonatomic        ) NSTimeInterval audioLength;
+@property (nonatomic, strong) AVAudioPlayer  *player;
 @end
 
 @implementation TSVoiceCell
 
 - (instancetype)initWithType:(TalkCellType)type talkCellContentType:(NSString *)talkCellContentType {
-    self = [super initWithType:type reuseIdentifier:TalkCellContentTypeAudio];
+    self = [super initWithType:type talkCellContentType:TalkCellContentTypeAudio];
     if (self) {
-        
+        ______WS();
         self.lblVoiceLength = [[UILabel alloc] init];
+        self.lblVoiceLength.font = kTSMainFont;
         [self addSubview:self.lblVoiceLength];
         
-        
         self.vSound = [[UIImageView alloc] init];
-        [self.vContent addSubview:self.vSound];
+        [self.vBubble addSubview:self.vSound];
+        
+        switch (self.cellType) {
+            case TalkCellTypeReceived: {
+                [self.lblVoiceLength mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.leading.equalTo(wSelf.vBubble.mas_trailing).with.offset(kTSBubbleTextXMargin/2);
+                    make.centerY.equalTo(wSelf.vBubble).with.offset(4);
+                }];
+                [self.vSound mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.leading.equalTo(wSelf.vBubble).with.offset(kTSBubbleTextXMargin);
+                    make.centerY.equalTo(wSelf.vBubble);
+                    make.size.mas_equalTo(CGSizeMake(18,18));
+                }];
+                break;
+            }
+            case TalkCellTypeSend: {
+                [self.lblVoiceLength mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.trailing.equalTo(wSelf.vBubble.mas_leading).with.offset(-kTSBubbleTextXMargin/2);
+                    make.centerY.equalTo(wSelf.vBubble).with.offset(4);
+                }];
+                [self.vSound mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.trailing.equalTo(wSelf.vBubble).with.offset(-kTSBubbleTextXMargin);
+                    make.centerY.equalTo(wSelf.vBubble);
+                    make.size.mas_equalTo(CGSizeMake(18,18));
+                }];
+                break;
+            }
+        }
+        
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playAudio)];
-        self.vContent.userInteractionEnabled = YES;
-        [self.vContent addGestureRecognizer:tap];
+        self.vBubble.userInteractionEnabled = YES;
+        [self.vBubble addGestureRecognizer:tap];
     }
     return self;
 }
@@ -38,14 +70,14 @@
 - (void)setFileUrl:(NSURL *)fileUrl {
     _fileUrl = fileUrl;
     
-    ______WS();
-    
     UIImage *soundImage = [UIImage imageNamed:@"from_voice_play"];
-    self.vSound.image = soundImage;
-    [self.vSound mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(wSelf.vContent);
-        make.size.mas_equalTo(CGSizeMake(18,18));
-    }];
+    if (self.cellType == TalkCellTypeSend) {
+        UIImage *flippedImage = [UIImage tp_horizontallyFlippedFromImage:soundImage];
+        self.vSound.image = flippedImage;
+    }
+    else {
+        self.vSound.image = soundImage;
+    }
     
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileUrl options:nil];
     CMTime audioDuration = audioAsset.duration;
@@ -59,18 +91,20 @@
     else {
         contentWidth = MinAudioCellWidth + (MaxAudioCellWidth - MinAudioCellWidth) * audioDurationSeconds / 60;
     }
-    [self.vContent mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(contentWidth, MinCellHeight));
+    [self.vBubble mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(contentWidth, 18+kTSBubbleTextYMargin*2));
     }];
-    self.height = MinCellHeight + kTSBubbleTextYMargin*4;
     
-    self.lblVoiceLength.text = voiceLength ;
-    CGSize size = [voiceLength textSizeWithFont:self.lblText.font constrainedToSize:CGSizeMake(MaxCellWidth, 999) lineBreakMode:NSLineBreakByWordWrapping];
+    
+    self.lblVoiceLength.text = voiceLength;
+    CGSize size = [voiceLength textSizeWithFont:self.lblVoiceLength.font constrainedToSize:CGSizeMake(kTSTalkCellMaxWidth, 999) lineBreakMode:NSLineBreakByWordWrapping];
     [self.lblVoiceLength mas_updateConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(size);
     }];
     
-    self.height = MinCellHeight + kTSBubbleTextYMargin*4;
+    
+    [self layoutSubviews];
+    self.height = 18+kTSBubbleTextYMargin*4;
 }
 
 

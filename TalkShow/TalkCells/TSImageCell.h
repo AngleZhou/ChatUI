@@ -1,13 +1,13 @@
 //
-//  TSVoiceCell.h
+//  TSImageCell.h
 //  TalkShow
 //
-//  Created by ZhouQian on 16/2/19.
+//  Created by ZhouQian on 16/3/2.
 //  Copyright © 2016年 ZhouQian. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "TalkCell.h"
 
-@interface TSVoiceCell : UITableViewCell
+@interface TSImageCell : TalkCell
 @property (nonatomic, strong) NSURL *fileUrl;
 @end

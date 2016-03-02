@@ -7,11 +7,12 @@
 //
 
 #import "ViewController.h"
-#import "TSTextView.h"
-#import "TalkSendCell.h"
-#import "TalkReceivedCell.h"
+#import "TSToolbarTextView.h"
 #import "TSDateTimeCell.h"
 #import "TSSave.h"
+#import "TalkCell.h"
+#import "TSTextCell.h"
+#import "TSVoiceCell.h"
 #import "TSMultiInputView.h"
 #import <AVFoundation/AVFoundation.h>
 
@@ -25,7 +26,7 @@
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
-@property (nonatomic, strong) TSTextView *textView;
+@property (nonatomic, strong) TSToolbarTextView *textView;
 //@property (nonatomic, strong) UILabel *btnVoice;
 @property (nonatomic, strong) UIButton *btnVoice;
 @property (nonatomic, strong) UILabel *btnKeyboard;
@@ -106,7 +107,7 @@
         make.size.mas_equalTo(CGSizeMake(24, 24));
     }];
     
-    self.textView = [[TSTextView alloc] init];
+    self.textView = [[TSToolbarTextView alloc] init];
     self.textView.font = [UIFont systemFontOfSize:messageFontSize];
     self.textView.backgroundColor = [UIColor whiteColor];
     self.textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3);
@@ -254,11 +255,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *identifier = @"TalkCell";//SENDCELL;
-    NSString *timeIdentifier = TIMECELL;
     
     id item = self.talks[indexPath.row];
     if ([item isKindOfClass:[NSDate class]]) {
+        NSString *timeIdentifier = TIMECELL;
         TSDateTimeCell *cell = (TSDateTimeCell *)[tableView dequeueReusableCellWithIdentifier:timeIdentifier];
         if (!cell) {
             cell = [[TSDateTimeCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:timeIdentifier];
@@ -267,30 +267,26 @@
         return cell;
     }
     else {
-        TalkCell *cell = nil;
-        if (indexPath.row % 2 == 0) {
-            cell = (TalkSendCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (!cell) {
-                cell = [[TalkSendCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
-            }
-        }
-        else {
-            cell = (TalkReceivedCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (!cell) {
-                cell = [[TalkReceivedCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
-            }
-        }
-        
+        TalkCellType cellType = indexPath.row % 2 == 0 ? TalkCellTypeSend : TalkCellTypeReceived;
         if ([item isKindOfClass:[NSString class]]) {
-            cell.text = (NSString *)item;
+            TSTextCell *cell = (TSTextCell *)[tableView dequeueReusableCellWithIdentifier:TalkCellContentTypeText];
+            if (!cell) {
+                cell = [[TSTextCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeText];
+            }
+            cell.content = (NSString *)item;
+            return cell;
         }
         if ([item isKindOfClass:[NSURL class]]) {
+            TSVoiceCell *cell = (TSVoiceCell *)[tableView dequeueReusableCellWithIdentifier:TalkCellContentTypeAudio];
+            if (!cell) {
+                cell = [[TSVoiceCell alloc] initWithType:cellType talkCellContentType:TalkCellContentTypeAudio];
+            }
             cell.fileUrl = (NSURL *)item;
+            return cell;
         }
-        
-        return cell;
-    }
   
+    }
+    return nil;
 }
 
 

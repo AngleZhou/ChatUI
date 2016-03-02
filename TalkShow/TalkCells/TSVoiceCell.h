@@ -10,4 +10,5 @@
 
 @interface TSVoiceCell : TalkCell
 @property (nonatomic, strong) NSURL *fileUrl;
+
 @end

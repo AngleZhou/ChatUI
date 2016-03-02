@@ -13,20 +13,20 @@
 
 
 
-#define MaxAudioCellWidth 150
-#define MinAudioCellWidth 40
-#define MinCellHeight 24
+
 
 @interface TalkCell () 
-@property (nonatomic, strong) TPMessageBubbleImage *msgBubbleImage;
+
 @end
 
 @implementation TalkCell
 
-- (instancetype)initWithType:(TalkCellType)type reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:reuseIdentifier];
+- (instancetype)initWithType:(TalkCellType)type talkCellContentType:(NSString *)talkCellContentType {
+    self = [super initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:talkCellContentType];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.cellType = type;
+        self.contentType = talkCellContentType;
         
         self.vBubble = [[UIImageView alloc] init];
         [self addSubview:self.vBubble];
