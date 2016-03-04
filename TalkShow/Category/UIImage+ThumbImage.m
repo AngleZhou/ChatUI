@@ -16,8 +16,6 @@
         return self;
     }
     
-    
-    
     CGFloat height = 0;
     CGFloat width = 0;
     if (self.size.height > maxWidth && self.size.width < maxWidth) {

@@ -14,6 +14,7 @@
 		B24FAEA71C76EDD100B8F523 /* UIColor+DarkerLighter.m in Sources */ = {isa = PBXBuildFile; fileRef = B24FAEA61C76EDD100B8F523 /* UIColor+DarkerLighter.m */; };
 		B24FAEB01C773CBC00B8F523 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = B24FAEAF1C773CBC00B8F523 /* Emoji.plist */; };
 		B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */; };
+		B253DE0D1C8935D10027B2D7 /* UIView+ToImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE0C1C8935D10027B2D7 /* UIView+ToImage.m */; };
 		B267A3621C853E4F0027A99A /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B267A3611C853E450027A99A /* iconfont.ttf */; };
 		B299CE651C869B87002672CA /* TSImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE641C869B87002672CA /* TSImageCell.m */; };
 		B299CE6A1C869BB0002672CA /* TalkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE671C869BB0002672CA /* TalkCell.m */; };
@@ -72,6 +73,8 @@
 		B24FAEAF1C773CBC00B8F523 /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = ../Emoji.plist; sourceTree = "<group>"; };
 		B24FAEB21C77474D00B8F523 /* TSMultiInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMultiInputView.h; path = InputView/TSMultiInputView.h; sourceTree = "<group>"; };
 		B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMultiInputView.m; path = InputView/TSMultiInputView.m; sourceTree = "<group>"; };
+		B253DE0B1C8935D10027B2D7 /* UIView+ToImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+ToImage.h"; path = "Category/UIView+ToImage.h"; sourceTree = "<group>"; };
+		B253DE0C1C8935D10027B2D7 /* UIView+ToImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+ToImage.m"; path = "Category/UIView+ToImage.m"; sourceTree = "<group>"; };
 		B267A3611C853E450027A99A /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		B299CE631C869B87002672CA /* TSImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSImageCell.h; path = TalkCells/TSImageCell.h; sourceTree = "<group>"; };
 		B299CE641C869B87002672CA /* TSImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSImageCell.m; path = TalkCells/TSImageCell.m; sourceTree = "<group>"; };
@@ -287,6 +290,8 @@
 				B2A167771C75C19700B899B8 /* NSDate+MessgeCellDescription.m */,
 				B299CE6C1C86CE80002672CA /* UIImage+ThumbImage.h */,
 				B299CE6D1C86CE80002672CA /* UIImage+ThumbImage.m */,
+				B253DE0B1C8935D10027B2D7 /* UIView+ToImage.h */,
+				B253DE0C1C8935D10027B2D7 /* UIView+ToImage.m */,
 				B23801A71C803B1D000A60A5 /* TSTools.h */,
 				B23801A81C803B1D000A60A5 /* TSTools.m */,
 			);
@@ -512,6 +517,7 @@
 				B2FFB96A1C74A75600F67FF7 /* ViewUtils.m in Sources */,
 				B299CE651C869B87002672CA /* TSImageCell.m in Sources */,
 				B2FFB96E1C756E8D00F67FF7 /* TPMessageBubble.m in Sources */,
+				B253DE0D1C8935D10027B2D7 /* UIView+ToImage.m in Sources */,
 				B2BFB5CF1C72BF54000B6C82 /* ViewController.m in Sources */,
 				B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */,
 				B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */,

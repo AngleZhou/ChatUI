@@ -83,6 +83,12 @@
     
     self.inputPlugInView = [[TSMultiInputView alloc] init];
     [self.view addSubview:self.inputPlugInView];
+    [self.inputPlugInView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(wSelf.view.mas_bottom);
+        make.leading.equalTo(wSelf.view);
+        make.trailing.equalTo(wSelf.view);
+        make.height.mas_equalTo(wSelf.inputPlugInView.height);
+    }];
     
     self.btnAdd = [[UIButton alloc] init];
     [self.btnAdd setBackgroundImage:[UIImage imageNamed:@"chat_setmode_add_btn_normal"] forState:UIControlStateNormal];
@@ -134,7 +140,7 @@
     [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(wSelf.view);
         make.trailing.equalTo(wSelf.view);
-        make.bottom.equalTo(wSelf.view);
+        make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
         make.height.mas_equalTo(toolBarMinHeight);
     }];
     
@@ -183,13 +189,15 @@
 - (void)showPlugInView {
     self.textView.editable = NO;
     ______WS();
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         wSelf.inputPlugInView.top = kTSScreenHeight - wSelf.inputPlugInView.height;
         wSelf.toolBar.top = kTSScreenHeight - wSelf.inputPlugInView.height - wSelf.toolBar.height;
     } completion:^(BOOL finished) {
-        [wSelf.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
-        }];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [wSelf.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
+//            }];
+//        });
     }];
     
 }

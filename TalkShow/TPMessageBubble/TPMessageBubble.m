@@ -59,7 +59,7 @@
 - (UIEdgeInsets)ts_centerPointEdgeInsetsForImageSize:(CGSize)size {
     // make image stretchable from center point
     CGPoint center = CGPointMake(size.width / 2.0f, size.height / 2.0f);
-    return UIEdgeInsetsMake(center.y, center.x, center.y, center.x);
+    return UIEdgeInsetsMake(size.height-10, center.x, size.height-10, center.x);//top left bottom right
 }
 
 - (TPMessageBubbleImage *)tpMsgSendBubble {

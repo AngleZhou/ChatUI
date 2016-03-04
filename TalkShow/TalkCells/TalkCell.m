@@ -7,13 +7,7 @@
 //
 
 #import "TalkCell.h"
-
 #import "NSString+Size.h"
-
-
-
-
-
 
 @interface TalkCell () 
 

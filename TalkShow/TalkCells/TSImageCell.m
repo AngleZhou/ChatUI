@@ -8,6 +8,7 @@
 
 #import "TSImageCell.h"
 #import "UIImage+ThumbImage.h"
+#import "UIView+ToImage.h"
 
 @interface TSImageCell ()
 @property (nonatomic, strong) UIImageView *imageContent;
@@ -33,16 +34,21 @@
     _fileUrl = fileUrl;
     UIImage *image = [UIImage imageWithContentsOfFile:fileUrl.path];
     UIImage *thumbImage = [image getThumbImage];
+
+    ______WS();
     
-    CALayer *maskLayer = [CALayer layer];
-    maskLayer.frame = CGRectMake(0, 0, thumbImage.size.width, thumbImage.size.height);
-    maskLayer.contents = (__bridge id)self.vBubble.image.CGImage;
-    self.imageContent.image = thumbImage;
-    self.imageContent.layer.mask = maskLayer;
-    [self.imageContent mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.vBubble mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
         make.size.mas_equalTo(thumbImage.size);
     }];
-    [self.vBubble mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self layoutSubviews];
+    CALayer *maskLayer = [CALayer layer];
+    maskLayer.frame = CGRectMake(0, 0, thumbImage.size.width, thumbImage.size.height);
+    maskLayer.contents = (__bridge id)[self.vBubble toImage].CGImage;
+    self.imageContent.image = thumbImage;
+    self.imageContent.layer.mask = maskLayer;
+    
+    [self.imageContent mas_updateConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(thumbImage.size);
     }];
     self.height = thumbImage.size.height + kTSBubbleTextYMargin*2;
