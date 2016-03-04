@@ -19,6 +19,7 @@
 
 #define kTSAvataWidth 32
 
+#define kTSInputPlugInViewHeight (kTSInputPluginCellWidth+20+12)*2+30
 #define kTSInputPluginCellWidth 57
 
 #define kTSInputPluginTextColor [UIColor grayColor]
@@ -28,6 +29,13 @@
 #define kTSScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kTSScreenHeight [UIScreen mainScreen].bounds.size.height
 #define iconFont(size) [UIFont fontWithName:@"IconFont" size:size]
+
+#define kTSHEIGHT4 480
+#define kTSHEIGHT5 568
+#define kTSHEIGHT6 667
+#define kTSHEIGHT6S 736
+
+
 
 #define ______WS() __weak __typeof(&*self) wSelf = self
 #define ______SS() __weak __typeof(&*wSelf) sSelf = wSelf

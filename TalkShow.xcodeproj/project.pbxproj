@@ -15,6 +15,11 @@
 		B24FAEB01C773CBC00B8F523 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = B24FAEAF1C773CBC00B8F523 /* Emoji.plist */; };
 		B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */; };
 		B253DE0D1C8935D10027B2D7 /* UIView+ToImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE0C1C8935D10027B2D7 /* UIView+ToImage.m */; };
+		B253DE101C895AAC0027B2D7 /* TSEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE0F1C895AAC0027B2D7 /* TSEmojiView.m */; };
+		B253DE5A1C89744E0027B2D7 /* NSString+ObjectiveSugar.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE531C89744E0027B2D7 /* NSString+ObjectiveSugar.m */; };
+		B253DE5B1C89744E0027B2D7 /* SFTag.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE551C89744E0027B2D7 /* SFTag.m */; };
+		B253DE5C1C89744E0027B2D7 /* SFTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE571C89744E0027B2D7 /* SFTagButton.m */; };
+		B253DE5D1C89744E0027B2D7 /* SFTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = B253DE591C89744E0027B2D7 /* SFTagView.m */; };
 		B267A3621C853E4F0027A99A /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B267A3611C853E450027A99A /* iconfont.ttf */; };
 		B299CE651C869B87002672CA /* TSImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE641C869B87002672CA /* TSImageCell.m */; };
 		B299CE6A1C869BB0002672CA /* TalkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B299CE671C869BB0002672CA /* TalkCell.m */; };
@@ -75,6 +80,16 @@
 		B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMultiInputView.m; path = InputView/TSMultiInputView.m; sourceTree = "<group>"; };
 		B253DE0B1C8935D10027B2D7 /* UIView+ToImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+ToImage.h"; path = "Category/UIView+ToImage.h"; sourceTree = "<group>"; };
 		B253DE0C1C8935D10027B2D7 /* UIView+ToImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+ToImage.m"; path = "Category/UIView+ToImage.m"; sourceTree = "<group>"; };
+		B253DE0E1C895AAC0027B2D7 /* TSEmojiView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSEmojiView.h; path = InputView/TSEmojiView.h; sourceTree = "<group>"; };
+		B253DE0F1C895AAC0027B2D7 /* TSEmojiView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSEmojiView.m; path = InputView/TSEmojiView.m; sourceTree = "<group>"; };
+		B253DE521C89744E0027B2D7 /* NSString+ObjectiveSugar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ObjectiveSugar.h"; sourceTree = "<group>"; };
+		B253DE531C89744E0027B2D7 /* NSString+ObjectiveSugar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ObjectiveSugar.m"; sourceTree = "<group>"; };
+		B253DE541C89744E0027B2D7 /* SFTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTag.h; sourceTree = "<group>"; };
+		B253DE551C89744E0027B2D7 /* SFTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTag.m; sourceTree = "<group>"; };
+		B253DE561C89744E0027B2D7 /* SFTagButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTagButton.h; sourceTree = "<group>"; };
+		B253DE571C89744E0027B2D7 /* SFTagButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTagButton.m; sourceTree = "<group>"; };
+		B253DE581C89744E0027B2D7 /* SFTagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFTagView.h; sourceTree = "<group>"; };
+		B253DE591C89744E0027B2D7 /* SFTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTagView.m; sourceTree = "<group>"; };
 		B267A3611C853E450027A99A /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		B299CE631C869B87002672CA /* TSImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSImageCell.h; path = TalkCells/TSImageCell.h; sourceTree = "<group>"; };
 		B299CE641C869B87002672CA /* TSImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSImageCell.m; path = TalkCells/TSImageCell.m; sourceTree = "<group>"; };
@@ -184,12 +199,37 @@
 			children = (
 				B24FAEB21C77474D00B8F523 /* TSMultiInputView.h */,
 				B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */,
+				B253DE0E1C895AAC0027B2D7 /* TSEmojiView.h */,
+				B253DE0F1C895AAC0027B2D7 /* TSEmojiView.m */,
 				B23801A41C80393C000A60A5 /* TSInputPluginModel.h */,
 				B23801A51C80393C000A60A5 /* TSInputPluginModel.m */,
 				B23801621C8029AF000A60A5 /* TSInputPluginCell.h */,
 				B23801631C8029AF000A60A5 /* TSInputPluginCell.m */,
 			);
 			name = InputView;
+			sourceTree = "<group>";
+		};
+		B253DE501C89744E0027B2D7 /* 第三方 */ = {
+			isa = PBXGroup;
+			children = (
+				B253DE511C89744E0027B2D7 /* SFTag */,
+			);
+			path = "第三方";
+			sourceTree = "<group>";
+		};
+		B253DE511C89744E0027B2D7 /* SFTag */ = {
+			isa = PBXGroup;
+			children = (
+				B253DE521C89744E0027B2D7 /* NSString+ObjectiveSugar.h */,
+				B253DE531C89744E0027B2D7 /* NSString+ObjectiveSugar.m */,
+				B253DE541C89744E0027B2D7 /* SFTag.h */,
+				B253DE551C89744E0027B2D7 /* SFTag.m */,
+				B253DE561C89744E0027B2D7 /* SFTagButton.h */,
+				B253DE571C89744E0027B2D7 /* SFTagButton.m */,
+				B253DE581C89744E0027B2D7 /* SFTagView.h */,
+				B253DE591C89744E0027B2D7 /* SFTagView.m */,
+			);
+			path = SFTag;
 			sourceTree = "<group>";
 		};
 		B2BFB5BB1C72BF54000B6C82 = {
@@ -217,6 +257,7 @@
 		B2BFB5C61C72BF54000B6C82 /* TalkShow */ = {
 			isa = PBXGroup;
 			children = (
+				B253DE501C89744E0027B2D7 /* 第三方 */,
 				B2EFB9F91C859C210022CA81 /* PluginsOfInput */,
 				B24FAEB11C77472000B8F523 /* InputView */,
 				B24FAEA81C76F0B500B8F523 /* TalkCells */,
@@ -522,14 +563,19 @@
 				B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */,
 				B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */,
 				B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */,
+				B253DE5B1C89744E0027B2D7 /* SFTag.m in Sources */,
 				B2FFB9611C745F0B00F67FF7 /* TSSave.m in Sources */,
 				B2FFB95C1C744EDD00F67FF7 /* TSToolbarTextView.m in Sources */,
 				B2BFB5CC1C72BF54000B6C82 /* AppDelegate.m in Sources */,
 				B299CE6A1C869BB0002672CA /* TalkCell.m in Sources */,
 				B2BFB5C91C72BF54000B6C82 /* main.m in Sources */,
+				B253DE101C895AAC0027B2D7 /* TSEmojiView.m in Sources */,
 				B23801A61C80393C000A60A5 /* TSInputPluginModel.m in Sources */,
 				B299CE6B1C869BB0002672CA /* TSDateTimeCell.m in Sources */,
+				B253DE5A1C89744E0027B2D7 /* NSString+ObjectiveSugar.m in Sources */,
 				B2FFB9561C73046800F67FF7 /* NSString+Size.m in Sources */,
+				B253DE5D1C89744E0027B2D7 /* SFTagView.m in Sources */,
+				B253DE5C1C89744E0027B2D7 /* SFTagButton.m in Sources */,
 				B24FAEA71C76EDD100B8F523 /* UIColor+DarkerLighter.m in Sources */,
 				B2EFB9F81C8574260022CA81 /* TSImagePicker.m in Sources */,
 				B299CE6E1C86CE80002672CA /* UIImage+ThumbImage.m in Sources */,

@@ -10,7 +10,7 @@
 #import "TSInputPluginCell.h"
 #import "TSInputPluginModel.h"
 
-#define TSInputPlugInViewHeight (kTSInputPluginCellWidth+20+12)*2+30
+
 
 @interface TSMultiInputView () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -20,7 +20,7 @@
 @implementation TSMultiInputView
 
 - (instancetype)init {
-    CGRect rect = CGRectMake(0, kTSScreenHeight, kTSScreenWidth, TSInputPlugInViewHeight);
+    CGRect rect = CGRectMake(0, kTSScreenHeight, kTSScreenWidth, kTSInputPlugInViewHeight);
     return [self initWithFrame:rect];
 }
 
