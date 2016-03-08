@@ -31,8 +31,17 @@
 {
 
   SFTagButton *btn = [[SFTagButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-  [btn setTitle:tag.text forState:UIControlStateNormal];
-  [btn.titleLabel setFont:tag.font];
+    if (tag.text.length > 0) {
+        [btn setTitle:tag.text forState:UIControlStateNormal];
+    }
+    if (tag.font) {
+        [btn.titleLabel setFont:tag.font];
+    }
+    if (tag.image) {
+        [btn setImage:tag.image forState:UIControlStateNormal];
+        [btn setImageEdgeInsets:tag.imageInsets];
+    }
+    
     btn.titleLabel.backgroundColor = tag.bgColor;
   [btn setBackgroundColor:tag.bgColor];
   [btn setTitleColor:tag.textColor forState:UIControlStateNormal];
@@ -40,29 +49,35 @@
     btn.checked = tag.bCheck ? YES : NO;
     btn.category = tag.category;
     
-    
     CGSize size;
-    CGSize constraintSize = CGSizeMake(MAXFLOAT, MAXFLOAT);
-#ifdef __IPHONE_7_0
-    NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    [paragraphStyle setAlignment:NSTextAlignmentLeft];
-    [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-    
-    NSDictionary* stringAttributes = @{NSFontAttributeName: tag.font,
-                                       NSParagraphStyleAttributeName: paragraphStyle};
-    size = [tag.text boundingRectWithSize: constraintSize
-                                  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
-                               attributes: stringAttributes
-                                  context: nil].size;
-#else
-    size = [tag.text sizeWithFont: tag.font
-                constrainedToSize: constraintSize
-                    lineBreakMode: NSLineBreakByWordWrapping];
-#endif
-    
 
-    size.width  += tag.textToBorderX * 2;
-    size.height += tag.textToBorderY * 2;
+    
+    if ((int)tag.size.height != 0 && (int)tag.size.width != 0) {
+        size = tag.size;
+    }
+    else {
+        CGSize constraintSize = CGSizeMake(MAXFLOAT, MAXFLOAT);
+#ifdef __IPHONE_7_0
+        NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [paragraphStyle setAlignment:NSTextAlignmentLeft];
+        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        
+        NSDictionary* stringAttributes = @{NSFontAttributeName: tag.font,
+                                           NSParagraphStyleAttributeName: paragraphStyle};
+        size = [tag.text boundingRectWithSize: constraintSize
+                                      options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
+                                   attributes: stringAttributes
+                                      context: nil].size;
+#else
+        size = [tag.text sizeWithFont: tag.font
+                    constrainedToSize: constraintSize
+                        lineBreakMode: NSLineBreakByWordWrapping];
+#endif
+        size.width  += tag.textToBorderX * 2;
+        size.height += tag.textToBorderY * 2;
+    }
+
+    
 
   btn.layer.cornerRadius = tag.cornerRadius;
     btn.layer.borderWidth = tag.borderWidth;

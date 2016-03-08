@@ -24,7 +24,7 @@
 
 #define kTSInputPluginTextColor [UIColor grayColor]
 #define kTSInputPluginViewBGColor [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
-#define kTSInputPluginCellFont [UIFont systemFontOfSize:13]
+
 
 #define kTSScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kTSScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -41,8 +41,9 @@
 #define ______SS() __weak __typeof(&*wSelf) sSelf = wSelf
 #define ______WX(x,y) __weak __typeof(&*x) y = x
 
-#define kTSMainFont [UIFont systemFontOfSize:15]
-
+#define kTSFontMain [UIFont systemFontOfSize:15]
+#define kTSFontInputPluginCell [UIFont systemFontOfSize:13]
+#define kTSFontEmoji [UIFont systemFontOfSize:33]
 
 static NSString *SENDCELL = @"SendCell";
 static NSString *RECEIVECELL = @"ReceiveCell";

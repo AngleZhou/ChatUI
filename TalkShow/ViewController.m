@@ -15,13 +15,18 @@
 #import "TSVoiceCell.h"
 #import "TSImageCell.h"
 #import "TSMultiInputView.h"
+#import "TSEmojiView.h"
 #import "TSImagePicker.h"
 #import <AVFoundation/AVFoundation.h>
 
 #import <Masonry.h>
 #import "IQKeyboardManager.h"
 
-#define toolBarMinHeight 44
+#define toolBarMinHeight 50
+#define textViewHeight 36
+#define actionButtonHeight 30
+#define actionButtonTopMargin (toolBarMinHeight - actionButtonHeight)/2
+#define buttonMargin 10
 #define messageFontSize 17
 
 
@@ -34,7 +39,9 @@
 @property (nonatomic, strong) UILabel *btnKeyboard;
 //@property (nonatomic, strong) UILabel *btnAdd;
 @property (nonatomic, strong) UIButton *btnAdd;
+@property (nonatomic, strong) UIButton *btnEmoji;
 @property (nonatomic, strong) TSMultiInputView *inputPlugInView;
+@property (nonatomic, strong) TSEmojiView *emojiView;
 
 @property (nonatomic, strong) NSMutableArray *talks;
 @end
@@ -63,22 +70,19 @@
     ______WS();
     
     
-//    self.btnVoice = iconfontLabel(@"\U0000e606", 24);
     self.btnVoice = [[UIButton alloc] init];
     self.btnVoice.tag = 998;
     [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_voice_btn_normal"] forState:UIControlStateNormal];
+    [self.btnVoice sizeToFit];
     [[[self.btnVoice rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
         wSelf.btnVoice.tag == 998 ? [wSelf voiceToggled] : [wSelf keyboardToggled];
         
     }];
-//    self.btnVoice.userInteractionEnabled = YES;
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(voiceToggled)];
-//    [self.btnVoice addGestureRecognizer:tap];
     [self.toolBar addSubview:self.btnVoice];
     [self.btnVoice mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(wSelf.toolBar).with.offset(kTSSideX);
-        make.top.equalTo(wSelf.toolBar).with.offset(8);
-//        make.size.mas_equalTo(CGSizeMake(24, 24));
+        make.top.equalTo(wSelf.toolBar).with.offset(actionButtonTopMargin);
+        make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
     
     self.inputPlugInView = [[TSMultiInputView alloc] init];
@@ -90,21 +94,45 @@
         make.height.mas_equalTo(wSelf.inputPlugInView.height);
     }];
     
+    self.emojiView = [[TSEmojiView alloc] init];
+    [self.view addSubview:self.emojiView];
+    [self.emojiView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(wSelf.view.mas_bottom);
+        make.leading.equalTo(wSelf.view);
+        make.trailing.equalTo(wSelf.view);
+        make.height.mas_equalTo(wSelf.emojiView.height);
+    }];
+    
+    
+    
     self.btnAdd = [[UIButton alloc] init];
     [self.btnAdd setBackgroundImage:[UIImage imageNamed:@"chat_setmode_add_btn_normal"] forState:UIControlStateNormal];
     [self.toolBar addSubview:self.btnAdd];
     [self.btnAdd sizeToFit];
     [self.btnAdd mas_makeConstraints:^(MASConstraintMaker *make) {
         make.trailing.equalTo(wSelf.toolBar).with.offset(-kTSSideX);
-        make.top.equalTo(wSelf.toolBar).with.offset(8);
+        make.top.equalTo(wSelf.toolBar).with.offset(actionButtonTopMargin);
+        make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
     [[[self.btnAdd rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
         //多种输入的选择view
         [wSelf showPlugInView];
     }];
     
+    self.btnEmoji = [[UIButton alloc] init];
+    [self.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
+    [self.toolBar addSubview:self.btnEmoji];
+    [self.btnEmoji sizeToFit];
+    [self.btnEmoji mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.equalTo(wSelf.btnAdd.mas_leading).with.offset(-buttonMargin);
+        make.top.equalTo(wSelf.toolBar).with.offset(actionButtonTopMargin);
+        make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
+    }];
+    [[[self.btnEmoji rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
+        [wSelf showEmojiView];
+    }];
     
-    self.btnKeyboard = [TSTools iconfontLabel:@"\U0000e602" size:24];
+    self.btnKeyboard = [TSTools iconfontLabel:@"\U0000e602" size:30];
     self.btnKeyboard.hidden = YES;
     self.btnKeyboard.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapk = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyboardToggled)];
@@ -112,8 +140,8 @@
     [self.toolBar addSubview:self.btnKeyboard];
     [self.btnKeyboard mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(wSelf.toolBar).with.offset(kTSSideX);
-        make.top.equalTo(wSelf.toolBar).with.offset(10);
-        make.size.mas_equalTo(CGSizeMake(24, 24));
+        make.top.equalTo(wSelf.toolBar).with.offset(actionButtonTopMargin);
+        make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
     
     self.textView = [[TSToolbarTextView alloc] init];
@@ -130,10 +158,10 @@
     
     
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(wSelf.btnVoice.mas_trailing).with.offset(kTSSideX);
-        make.trailing.equalTo(wSelf.btnAdd.mas_leading).with.offset(-kTSSideX);
-        make.top.equalTo(wSelf.toolBar).with.offset(kTSSideX);
-        make.bottom.equalTo(wSelf.toolBar).with.offset(-kTSSideX);
+        make.leading.equalTo(wSelf.btnVoice.mas_trailing).with.offset(buttonMargin);
+        make.trailing.equalTo(wSelf.btnEmoji.mas_leading).with.offset(-buttonMargin);
+        make.top.equalTo(wSelf.toolBar).with.offset((toolBarMinHeight - textViewHeight)/2);
+        make.bottom.equalTo(wSelf.toolBar).with.offset(-(toolBarMinHeight - textViewHeight)/2);
     }];
     
     
@@ -200,6 +228,15 @@
 //        });
     }];
     
+}
+
+- (void)showEmojiView {
+    [self.textView resignFirstResponder];
+    ______WS();
+    [UIView animateWithDuration:0.3 animations:^{
+        wSelf.emojiView.top = kTSScreenHeight - wSelf.emojiView.height;
+        wSelf.toolBar.top = kTSScreenHeight - wSelf.emojiView.height - wSelf.toolBar.height;
+    }];
 }
 
 #pragma mark - TSTextView

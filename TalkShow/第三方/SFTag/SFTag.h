@@ -8,26 +8,33 @@
 
 @interface SFTag : NSObject
 
-@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString     *text;
 
-@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, strong) UIImage      *image;//use image as tag instead of text
+@property (nonatomic        ) UIEdgeInsets imageInsets;
 
-@property (nonatomic, strong) UIColor *bgColor;
+@property (nonatomic, strong) UIColor      *textColor;
 
-@property (nonatomic, strong) UIColor *borderColor;
+@property (nonatomic, strong) UIColor      *bgColor;
 
-@property (nonatomic, assign) CGFloat cornerRadius;
+@property (nonatomic, strong) UIColor      *borderColor;
 
-@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, assign) CGFloat      cornerRadius;
 
-@property (nonatomic) BOOL bCheck;
+@property (nonatomic, strong) UIFont       *font;
 
-@property (nonatomic, strong) NSString *category;
+@property (nonatomic        ) BOOL         bCheck;
 
-@property (nonatomic) CGFloat textToBorderX;
-@property (nonatomic) CGFloat textToBorderY;
+@property (nonatomic, strong) NSString     *category;
 
-@property (nonatomic) CGFloat borderWidth;
+@property (nonatomic        ) CGFloat      textToBorderX;
+@property (nonatomic        ) CGFloat      textToBorderY;
+
+@property (nonatomic        ) CGSize       size;
+
+@property (nonatomic        ) CGFloat      borderWidth;
+
+
 //上下左右的缝隙
 //@property (nonatomic) CGFloat inset;
 

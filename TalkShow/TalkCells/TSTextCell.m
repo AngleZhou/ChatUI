@@ -20,7 +20,7 @@
     if (self) {
         self.lblText = [[UILabel alloc] init];
         self.lblText.text = self.content;
-        self.lblText.font = kTSMainFont;
+        self.lblText.font = kTSFontMain;
         self.lblText.numberOfLines = 0;
         self.lblText.lineBreakMode = NSLineBreakByWordWrapping;
         [self.vBubble addSubview:self.lblText];
