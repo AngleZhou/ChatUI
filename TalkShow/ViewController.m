@@ -20,17 +20,16 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import <Masonry.h>
-#import "IQKeyboardManager.h"
 
 #define toolBarMinHeight 50
 #define textViewHeight 36
 #define actionButtonHeight 30
 #define actionButtonTopMargin (toolBarMinHeight - actionButtonHeight)/2
 #define buttonMargin 10
-#define messageFontSize 17
+#define messageFontSize 19
 
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
 @property (nonatomic, strong) TSToolbarTextView *textView;
@@ -59,7 +58,6 @@
 
 - (void)initUI {
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [[IQKeyboardManager sharedManager] disableToolbarInViewControllerClass:[self class]];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -87,14 +85,15 @@
     
     self.inputPlugInView = [[TSMultiInputView alloc] init];
     [self.view addSubview:self.inputPlugInView];
-    [self.inputPlugInView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(wSelf.view.mas_bottom);
-        make.leading.equalTo(wSelf.view);
-        make.trailing.equalTo(wSelf.view);
-        make.height.mas_equalTo(wSelf.inputPlugInView.height);
-    }];
+//    [self.inputPlugInView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(wSelf.view.mas_bottom);
+//        make.leading.equalTo(wSelf.view);
+//        make.trailing.equalTo(wSelf.view);
+//        make.height.mas_equalTo(wSelf.inputPlugInView.height);
+//    }];
     
     self.emojiView = [[TSEmojiView alloc] init];
+    self.emojiView.delegate = self;
     [self.view addSubview:self.emojiView];
     [self.emojiView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(wSelf.view.mas_bottom);
@@ -147,7 +146,7 @@
     self.textView = [[TSToolbarTextView alloc] init];
     self.textView.font = [UIFont systemFontOfSize:messageFontSize];
     self.textView.backgroundColor = [UIColor whiteColor];
-    self.textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3);
+    self.textView.textContainerInset = UIEdgeInsetsMake(7, 3, 7, 3);//top left bottom right
     self.textView.layer.borderColor = [UIColor blackColor].CGColor;
     self.textView.layer.borderWidth = 0.5;
     self.textView.layer.cornerRadius = 5;
@@ -155,7 +154,12 @@
     self.textView.delegate = self;
     self.textView.delegatets = self;
     [self.toolBar addSubview:self.textView];
-    
+    [[RACSignal combineLatest:@[RACObserve(self, textView.text)]] subscribeNext:^(id x) {
+        [wSelf.emojiView sendButtonHighlighted:(wSelf.textView.text.length > 0)];
+    }];
+//    [[self.textView rac_textSignal] subscribeNext:^(id x) {
+//        [wSelf.emojiView sendButtonHighlighted:(wSelf.textView.text.length > 0)];
+//    }];
     
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(wSelf.btnVoice.mas_trailing).with.offset(buttonMargin);
@@ -216,16 +220,13 @@
 
 - (void)showPlugInView {
     self.textView.editable = NO;
+    self.inputPlugInView.top = kTSScreenHeight;
     ______WS();
     [UIView animateWithDuration:0.3 animations:^{
         wSelf.inputPlugInView.top = kTSScreenHeight - wSelf.inputPlugInView.height;
         wSelf.toolBar.top = kTSScreenHeight - wSelf.inputPlugInView.height - wSelf.toolBar.height;
     } completion:^(BOOL finished) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [wSelf.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
-//            }];
-//        });
+
     }];
     
 }
@@ -260,7 +261,6 @@
             }
         }
         
-        
         textView.text = @"";
         [textView resignFirstResponder];
     }
@@ -268,6 +268,26 @@
     return YES;
 }
 
+
+
+#pragma mark - TSEmojiView
+
+- (void)TSEmojiView:(TSEmojiView *)vEmoji emoji:(NSString *)emoji {
+    self.textView.text = [self.textView.text stringByAppendingString:emoji];
+}
+
+- (void)TSEmojiViewDeleteLast {
+    if (self.textView.text.length > 0) {
+        NSString *text = self.textView.text;
+        NSRange range = [text rangeOfComposedCharacterSequenceAtIndex:text.length-1];
+        text = [text substringToIndex:(text.length - range.length)];//index从1开始算起
+        self.textView.text = text;
+    }
+}
+
+- (void)TSEmojiViewSendButtonTapped {
+    [self addDataToTableView:self.textView.text];
+}
 
 #pragma mark - TableView
 

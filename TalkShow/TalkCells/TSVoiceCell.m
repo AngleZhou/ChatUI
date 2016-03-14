@@ -27,7 +27,7 @@
     if (self) {
         ______WS();
         self.lblVoiceLength = [[UILabel alloc] init];
-        self.lblVoiceLength.font = kTSMainFont;
+        self.lblVoiceLength.font = kTSFontMain;
         [self addSubview:self.lblVoiceLength];
         
         self.vSound = [[UIImageView alloc] init];

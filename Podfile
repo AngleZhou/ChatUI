@@ -10,6 +10,6 @@
 pod 'Masonry', '~> 0.6.4’
 pod 'ReactiveCocoa', '~> 2.5'
 pod 'MBProgressHUD'
-pod 'IQKeyboardManager', '~> 3.3.6’
+#pod 'IQKeyboardManager', '~> 3.3.6’
 
 pod 'Reveal-iOS-SDK', :configurations => ['Debug']

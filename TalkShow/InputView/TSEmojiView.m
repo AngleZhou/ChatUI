@@ -43,7 +43,6 @@
         NSInteger numInPage = numInRow*3-1;
         NSInteger numOfPages = emojis.count/numInPage;
         CGFloat inset = [self emojiItenInset];
-//        NSMutableArray *mArray = [[NSMutableArray alloc] init];
         CGFloat x = 0;
         CGFloat width = inset * (numInRow+1) + numInRow * 35;
         CGFloat xPadding = (kTSScreenWidth - width)/2;
@@ -59,12 +58,14 @@
                 emoji.text = emojis[i*numInPage+j];
                 emoji.font = kTSFontEmoji;
                 emoji.size = CGSizeMake(35, 35);
+                emoji.action = @selector(addEmoji:);
                 [vEmoji addTag:emoji];
             }
             SFTag *btnEmojiDelete = [[SFTag alloc] init];
             btnEmojiDelete.image = [UIImage imageNamed:@"emoji_btn_delete"];
             btnEmojiDelete.imageInsets = UIEdgeInsetsMake(6, 0, 6, 0);//top left bottom right
             btnEmojiDelete.size = CGSizeMake(35, 35);
+            btnEmojiDelete.action = @selector(deleteEmoji);
             [vEmoji addTag:btnEmojiDelete];
             
             x = x + kTSScreenWidth;
@@ -96,20 +97,40 @@
         }];
         
         self.btnSend = [[UIButton alloc] init];
-        self.btnSend.titleLabel.textColor = [UIColor grayColor];
         self.btnSend.titleLabel.font = kTSFontMain;
         [self.bottomBar addSubview:self.btnSend];
+        [self.btnSend setBackgroundColor:[UIColor colorWithWhite:0.9 alpha:1]];
         [self.btnSend setTitle:@"发送" forState:UIControlStateNormal];
+        [self.btnSend setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        self.btnSend.titleEdgeInsets = UIEdgeInsetsMake(5, 10, 5, 10);//top left bottom right
+        [[[self.btnSend rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
+            if ([wSelf.delegate respondsToSelector:@selector(TSEmojiViewSendButtonTapped)]) {
+                [wSelf.delegate TSEmojiViewSendButtonTapped];
+            }
+        }];
         CGSize size = [self.btnSend.titleLabel.text textSizeWithFont:self.btnSend.titleLabel.font constrainedToSize:CGSizeMake(kTSScreenWidth, 44) lineBreakMode:(NSLineBreakByTruncatingTail)];
         [self.btnSend mas_makeConstraints:^(MASConstraintMaker *make) {
             make.trailing.equalTo(wSelf.bottomBar);
-            make.top.equalTo(wSelf);
-            make.bottom.equalTo(wSelf);
-            make.width.mas_equalTo(size.width);
+            make.top.equalTo(wSelf.bottomBar);
+            make.bottom.equalTo(wSelf.bottomBar);
+            make.width.mas_equalTo(size.width+20);
         }];
     }
     return self;
 }
+
+- (void)addEmoji:(UIButton *)button {
+    NSString *text = button.titleLabel.text;
+    if ([self.delegate respondsToSelector:@selector(TSEmojiView:emoji:)]) {
+        [self.delegate TSEmojiView:self emoji:text];
+    }
+}
+- (void)deleteEmoji {
+    if ([self.delegate respondsToSelector:@selector(TSEmojiViewDeleteLast)]) {
+        [self.delegate TSEmojiViewDeleteLast];
+    }
+}
+
 
 - (NSArray *)loadEmoji {
     NSString *emojiPath = [[NSBundle mainBundle] pathForResource:@"Emoji" ofType:@".plist"];
@@ -135,6 +156,17 @@
     }
     else {
         return 10;
+    }
+}
+
+- (void)sendButtonHighlighted:(BOOL)highlight {
+    if (highlight) {
+        [self.btnSend setBackgroundColor:[UIColor colorWithRed:0 green:128/255.0 blue:255/255.0 alpha:1]];
+        [self.btnSend setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    }
+    else {
+        [self.btnSend setBackgroundColor:[UIColor colorWithWhite:0.9 alpha:1]];
+        [self.btnSend setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     }
 }
 

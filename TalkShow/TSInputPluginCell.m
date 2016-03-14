@@ -38,7 +38,7 @@
         self.lblName.backgroundColor = kTSInputPluginViewBGColor;
         self.lblName.textColor = kTSInputPluginTextColor;
         self.lblName.textAlignment = NSTextAlignmentCenter;
-        self.lblName.font = kTSInputPluginCellFont;
+        self.lblName.font = kTSFontInputPluginCell;
         [self addSubview:self.lblName];
         [self.lblName mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(wSelf.btnPlugin);

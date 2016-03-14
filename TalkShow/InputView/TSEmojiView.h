@@ -7,7 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+@class TSEmojiView;
+
+@protocol TSEmojiViewDelegate <NSObject>
+
+- (void)TSEmojiView:(TSEmojiView *)vEmoji emoji:(NSString *)emoji;
+- (void)TSEmojiViewDeleteLast;
+- (void)TSEmojiViewSendButtonTapped;
+
+@end
 
 @interface TSEmojiView : UIView
+@property (nonatomic, weak) id<TSEmojiViewDelegate> delegate;
 
+- (void)sendButtonHighlighted:(BOOL)highlight;
 @end
