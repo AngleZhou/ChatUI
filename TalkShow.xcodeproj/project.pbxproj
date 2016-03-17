@@ -29,8 +29,7 @@
 		B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A167771C75C19700B899B8 /* NSDate+MessgeCellDescription.m */; };
 		B2BFB5C91C72BF54000B6C82 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5C81C72BF54000B6C82 /* main.m */; };
 		B2BFB5CC1C72BF54000B6C82 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5CB1C72BF54000B6C82 /* AppDelegate.m */; };
-		B2BFB5CF1C72BF54000B6C82 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5CE1C72BF54000B6C82 /* ViewController.m */; };
-		B2BFB5D21C72BF54000B6C82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2BFB5D01C72BF54000B6C82 /* Main.storyboard */; };
+		B2BFB5CF1C72BF54000B6C82 /* TSChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5CE1C72BF54000B6C82 /* TSChatViewController.m */; };
 		B2BFB5D41C72BF54000B6C82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2BFB5D31C72BF54000B6C82 /* Assets.xcassets */; };
 		B2BFB5D71C72BF54000B6C82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2BFB5D51C72BF54000B6C82 /* LaunchScreen.storyboard */; };
 		B2BFB5E21C72BF54000B6C82 /* TalkShowTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5E11C72BF54000B6C82 /* TalkShowTests.m */; };
@@ -108,9 +107,8 @@
 		B2BFB5C81C72BF54000B6C82 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B2BFB5CA1C72BF54000B6C82 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B2BFB5CB1C72BF54000B6C82 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B2BFB5CD1C72BF54000B6C82 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B2BFB5CE1C72BF54000B6C82 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B2BFB5D11C72BF54000B6C82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B2BFB5CD1C72BF54000B6C82 /* TSChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSChatViewController.h; sourceTree = "<group>"; };
+		B2BFB5CE1C72BF54000B6C82 /* TSChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSChatViewController.m; sourceTree = "<group>"; };
 		B2BFB5D31C72BF54000B6C82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2BFB5D61C72BF54000B6C82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B2BFB5D81C72BF54000B6C82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -266,8 +264,8 @@
 				B2FFB9531C73045800F67FF7 /* Category */,
 				B2BFB5CA1C72BF54000B6C82 /* AppDelegate.h */,
 				B2BFB5CB1C72BF54000B6C82 /* AppDelegate.m */,
-				B2BFB5CD1C72BF54000B6C82 /* ViewController.h */,
-				B2BFB5CE1C72BF54000B6C82 /* ViewController.m */,
+				B2BFB5CD1C72BF54000B6C82 /* TSChatViewController.h */,
+				B2BFB5CE1C72BF54000B6C82 /* TSChatViewController.m */,
 				B2FFB95A1C744EDD00F67FF7 /* TSToolbarTextView.h */,
 				B2FFB95B1C744EDD00F67FF7 /* TSToolbarTextView.m */,
 				B2FFB95F1C745F0B00F67FF7 /* TSSave.h */,
@@ -275,7 +273,6 @@
 				B2FFB9521C72FE7D00F67FF7 /* TalkShowConstant.h */,
 				B2A167751C75B9F200B899B8 /* TSHeaders.h */,
 				B2FFB9511C72FE7300F67FF7 /* TalkShow.pch */,
-				B2BFB5D01C72BF54000B6C82 /* Main.storyboard */,
 				B24FAEAF1C773CBC00B8F523 /* Emoji.plist */,
 				B2BFB5D31C72BF54000B6C82 /* Assets.xcassets */,
 				B2BFB5D51C72BF54000B6C82 /* LaunchScreen.storyboard */,
@@ -479,7 +476,6 @@
 				B2BFB5D71C72BF54000B6C82 /* LaunchScreen.storyboard in Resources */,
 				B2BFB5D41C72BF54000B6C82 /* Assets.xcassets in Resources */,
 				B267A3621C853E4F0027A99A /* iconfont.ttf in Resources */,
-				B2BFB5D21C72BF54000B6C82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +555,7 @@
 				B299CE651C869B87002672CA /* TSImageCell.m in Sources */,
 				B2FFB96E1C756E8D00F67FF7 /* TPMessageBubble.m in Sources */,
 				B253DE0D1C8935D10027B2D7 /* UIView+ToImage.m in Sources */,
-				B2BFB5CF1C72BF54000B6C82 /* ViewController.m in Sources */,
+				B2BFB5CF1C72BF54000B6C82 /* TSChatViewController.m in Sources */,
 				B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */,
 				B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */,
 				B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */,
@@ -615,14 +611,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B2BFB5D01C72BF54000B6C82 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B2BFB5D11C72BF54000B6C82 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B2BFB5D51C72BF54000B6C82 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

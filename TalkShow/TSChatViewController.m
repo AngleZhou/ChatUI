@@ -6,7 +6,7 @@
 //  Copyright © 2016年 ZhouQian. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "TSChatViewController.h"
 #import "TSToolbarTextView.h"
 #import "TSDateTimeCell.h"
 #import "TSSave.h"
@@ -29,8 +29,8 @@
 #define messageFontSize 19
 
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate>
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@interface TSChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate>
+@property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
 @property (nonatomic, strong) TSToolbarTextView *textView;
 //@property (nonatomic, strong) UILabel *btnVoice;
@@ -45,7 +45,7 @@
 @property (nonatomic, strong) NSMutableArray *talks;
 @end
 
-@implementation ViewController
+@implementation TSChatViewController
 
 
 
@@ -54,14 +54,25 @@
     [super viewDidLoad];
     [self initUI];
     [TSImagePicker sharedInstance].delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initUI {
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:(UITableViewStylePlain)];
+    [self.view addSubview:self.tableView];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    [self.tableView registerClass:[TalkCell class] forCellReuseIdentifier:@"TalkCell"];
+    [self.tableView registerClass:[TSDateTimeCell class] forCellReuseIdentifier:TIMECELL];
     
-    self.toolBar = [[UIToolbar alloc] init];
+    self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, kTSScreenHeight - toolBarMinHeight, kTSScreenWidth, toolBarMinHeight)];
     self.toolBar.backgroundColor = [UIColor grayColor];
     [self.view addSubview:self.toolBar];
     
@@ -95,12 +106,12 @@
     self.emojiView = [[TSEmojiView alloc] init];
     self.emojiView.delegate = self;
     [self.view addSubview:self.emojiView];
-    [self.emojiView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(wSelf.view.mas_bottom);
-        make.leading.equalTo(wSelf.view);
-        make.trailing.equalTo(wSelf.view);
-        make.height.mas_equalTo(wSelf.emojiView.height);
-    }];
+//    [self.emojiView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(wSelf.view.mas_bottom);
+//        make.leading.equalTo(wSelf.view);
+//        make.trailing.equalTo(wSelf.view);
+//        make.height.mas_equalTo(wSelf.emojiView.height);
+//    }];
     
     
     
@@ -115,7 +126,15 @@
     }];
     [[[self.btnAdd rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
         //多种输入的选择view
-        [wSelf showPlugInView];
+        if (wSelf.btnAdd.tag == 158) {
+            [wSelf textViewEditMode];
+            wSelf.btnAdd.tag = 999;
+            wSelf.inputPlugInView.top = kTSScreenHeight;
+        }
+        else {
+            [wSelf showPlugInView];
+        }
+        
     }];
     
     self.btnEmoji = [[UIButton alloc] init];
@@ -128,7 +147,16 @@
         make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
     [[[self.btnEmoji rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
-        [wSelf showEmojiView];
+        if (wSelf.btnEmoji.tag == 157) {
+            [wSelf textViewEditMode];
+            wSelf.btnEmoji.tag = 999;
+            [wSelf.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
+            wSelf.emojiView.top = kTSScreenHeight;
+        }
+        else {
+            [wSelf showEmojiView];
+        }
+        
     }];
     
     self.btnKeyboard = [TSTools iconfontLabel:@"\U0000e602" size:30];
@@ -168,26 +196,13 @@
         make.bottom.equalTo(wSelf.toolBar).with.offset(-(toolBarMinHeight - textViewHeight)/2);
     }];
     
-    
-    [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(wSelf.view);
-        make.trailing.equalTo(wSelf.view);
-        make.bottom.equalTo(wSelf.inputPlugInView.mas_top);
-        make.height.mas_equalTo(toolBarMinHeight);
-    }];
-    
-    
+  
 }
 
-//- (void)loadView {
-//    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//    self.view = scrollView;
-//}
+
 
 
 - (void)voiceToggled {
-//    self.btnVoice.hidden = YES;
-//    self.btnKeyboard.hidden = NO;
     [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_key_btn_normal"] forState:UIControlStateNormal];
     self.btnVoice.tag = 997;
     
@@ -199,6 +214,12 @@
     self.textView.textAlignment = NSTextAlignmentCenter;
     self.textView.tsState = TSTextViewStateButton;
     self.textView.selectable = NO;
+    if (self.inputPlugInView.top < kTSScreenHeight) {
+        [self hidePlugInView];
+    }
+    if (self.emojiView.top < kTSScreenHeight) {
+        [self hideEmojiView];
+    }
 }
 
 - (void)keyboardToggled {
@@ -215,31 +236,113 @@
     self.textView.selectable = YES;
 }
 
+- (void)textViewEditMode {
+    [self.textView becomeFirstResponder];
+}
 
 #pragma mark - Action
 
-- (void)showPlugInView {
-    self.textView.editable = NO;
+- (void)btnAddOriginalState {
+    self.btnAdd.tag = 999;
     self.inputPlugInView.top = kTSScreenHeight;
+}
+- (void)btnEmojiOriginalState {
+    self.btnEmoji.tag = 999;
+    self.emojiView.top = kTSScreenHeight;
+    [self.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
+}
+- (void)showPlugInView {
+    [self.textView resignFirstResponder];
     ______WS();
+    wSelf.btnAdd.tag = 158;
+    [wSelf btnEmojiOriginalState];
     [UIView animateWithDuration:0.3 animations:^{
         wSelf.inputPlugInView.top = kTSScreenHeight - wSelf.inputPlugInView.height;
         wSelf.toolBar.top = kTSScreenHeight - wSelf.inputPlugInView.height - wSelf.toolBar.height;
     } completion:^(BOOL finished) {
-
+        wSelf.emojiView.top = kTSScreenHeight;
     }];
     
 }
 
-- (void)showEmojiView {
-    [self.textView resignFirstResponder];
+- (void)hidePlugInView {
     ______WS();
     [UIView animateWithDuration:0.3 animations:^{
-        wSelf.emojiView.top = kTSScreenHeight - wSelf.emojiView.height;
-        wSelf.toolBar.top = kTSScreenHeight - wSelf.emojiView.height - wSelf.toolBar.height;
+        wSelf.inputPlugInView.top = kTSScreenHeight;
+        wSelf.toolBar.top = kTSScreenHeight - wSelf.toolBar.height;
     }];
 }
 
+- (void)showEmojiView {
+    ______WS();
+    [wSelf.textView resignFirstResponder];
+    wSelf.btnEmoji.tag = 157;
+    [wSelf btnAddOriginalState];
+    [wSelf.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chat_setmode_key_btn_normal"] forState:UIControlStateNormal];
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        wSelf.emojiView.top = kTSScreenHeight - wSelf.emojiView.height;
+        wSelf.toolBar.top = kTSScreenHeight - wSelf.emojiView.height - wSelf.toolBar.height;
+    } completion:^(BOOL finished) {
+        wSelf.inputPlugInView.top = kTSScreenHeight;
+    }];
+}
+- (void)hideEmojiView {
+    ______WS();
+    [UIView animateWithDuration:0.3 animations:^{
+        wSelf.emojiView.top = kTSScreenHeight;
+        wSelf.toolBar.top = kTSScreenHeight - wSelf.toolBar.height;
+    }];
+}
+
+
+
+- (void)keyboardShow:(NSNotification *)note {
+    NSDictionary *userInfo = note.userInfo;
+    NSTimeInterval animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    
+    
+    self.toolBar.frame = CGRectMake(0,
+                                    kTSScreenHeight - keyboardFrame.size.height - self.toolBar.height,
+                                    self.toolBar.width,
+                                    self.toolBar.height);
+    [UIView commitAnimations];
+}
+- (void)keyboardHide:(NSNotification *)note {
+    NSDictionary *userInfo = note.userInfo;
+    NSTimeInterval animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    CGRect keyboardEndFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect keyboardBeginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+//    CGRect keyboardFrameBegin = [self.tableView convertRect:keyboardBeginFrame toView:nil];
+//    CGRect keyboardFrameEnd = [self.tableView convertRect:keyboardEndFrame toView:nil];
+//    CGRect newFrame = self.tableView.frame;
+//    newFrame.origin.y -= (keyboardFrameBegin.origin.y - keyboardFrameEnd.origin.y);
+//    self.tableView.frame = newFrame;
+//    if (self.emojiView.top >= kTSScreenHeight) {
+        self.toolBar.frame = CGRectMake(0,
+                                        kTSScreenHeight-self.toolBar.height,
+                                        self.toolBar.width,
+                                        self.toolBar.height);
+//    }
+    
+    [UIView commitAnimations];
+//    [self.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.equalTo(wSelf.view);
+//    }];
+//    [self.toolBar setNeedsLayout];
+//    [self.toolBar layoutIfNeeded];
+
+}
 #pragma mark - TSTextView
 - (void)TSTextViewAddAudio:(NSURL *)audioPath {
     [self addDataToTableView:audioPath];
@@ -269,7 +372,6 @@
 }
 
 
-
 #pragma mark - TSEmojiView
 
 - (void)TSEmojiView:(TSEmojiView *)vEmoji emoji:(NSString *)emoji {
@@ -287,6 +389,7 @@
 
 - (void)TSEmojiViewSendButtonTapped {
     [self addDataToTableView:self.textView.text];
+    self.textView.text = @"";
 }
 
 #pragma mark - TableView

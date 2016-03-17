@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "TSChatViewController.h"
 
 @interface AppDelegate ()
 
@@ -18,7 +18,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    TSChatViewController *chatV = [[TSChatViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:chatV];
     
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
