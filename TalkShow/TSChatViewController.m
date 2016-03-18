@@ -28,12 +28,17 @@
 #define buttonMargin 10
 #define messageFontSize 19
 
+#define btnVoiceTag  156
+#define btnEmojiTag  157
+#define btnAddTag    158
+#define btnNormalTag 999
+
 
 @interface TSChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate>
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
 @property (nonatomic, strong) TSToolbarTextView *textView;
-//@property (nonatomic, strong) UILabel *btnVoice;
+@property (nonatomic, strong) NSString *txtContent;
 @property (nonatomic, strong) UIButton *btnVoice;
 @property (nonatomic, strong) UILabel *btnKeyboard;
 //@property (nonatomic, strong) UILabel *btnAdd;
@@ -78,13 +83,20 @@
     
     ______WS();
     
+    self.inputPlugInView = [[TSMultiInputView alloc] init];
+    [self.view addSubview:self.inputPlugInView];
+    
+    self.emojiView = [[TSEmojiView alloc] init];
+    self.emojiView.delegate = self;
+    [self.view addSubview:self.emojiView];
+    
     
     self.btnVoice = [[UIButton alloc] init];
-    self.btnVoice.tag = 998;
+    self.btnVoice.tag = btnNormalTag;
     [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_voice_btn_normal"] forState:UIControlStateNormal];
     [self.btnVoice sizeToFit];
     [[[self.btnVoice rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
-        wSelf.btnVoice.tag == 998 ? [wSelf voiceToggled] : [wSelf keyboardToggled];
+        wSelf.btnVoice.tag == btnNormalTag ? [wSelf voiceToggled] : [wSelf keyboardToggled];
         
     }];
     [self.toolBar addSubview:self.btnVoice];
@@ -93,26 +105,6 @@
         make.top.equalTo(wSelf.toolBar).with.offset(actionButtonTopMargin);
         make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
-    
-    self.inputPlugInView = [[TSMultiInputView alloc] init];
-    [self.view addSubview:self.inputPlugInView];
-//    [self.inputPlugInView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(wSelf.view.mas_bottom);
-//        make.leading.equalTo(wSelf.view);
-//        make.trailing.equalTo(wSelf.view);
-//        make.height.mas_equalTo(wSelf.inputPlugInView.height);
-//    }];
-    
-    self.emojiView = [[TSEmojiView alloc] init];
-    self.emojiView.delegate = self;
-    [self.view addSubview:self.emojiView];
-//    [self.emojiView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(wSelf.view.mas_bottom);
-//        make.leading.equalTo(wSelf.view);
-//        make.trailing.equalTo(wSelf.view);
-//        make.height.mas_equalTo(wSelf.emojiView.height);
-//    }];
-    
     
     
     self.btnAdd = [[UIButton alloc] init];
@@ -126,13 +118,15 @@
     }];
     [[[self.btnAdd rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
         //多种输入的选择view
-        if (wSelf.btnAdd.tag == 158) {
+        if (wSelf.btnAdd.tag == btnAddTag) {
             [wSelf textViewEditMode];
-            wSelf.btnAdd.tag = 999;
+            wSelf.btnAdd.tag = btnNormalTag;
             wSelf.inputPlugInView.top = kTSScreenHeight;
         }
         else {
             [wSelf showPlugInView];
+            [wSelf textViewNormalState];
+            [wSelf btnVoiceOriginalState];
         }
         
     }];
@@ -147,16 +141,15 @@
         make.size.mas_equalTo(CGSizeMake(actionButtonHeight, actionButtonHeight));
     }];
     [[[self.btnEmoji rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
-        if (wSelf.btnEmoji.tag == 157) {
+        if (wSelf.btnEmoji.tag == btnEmojiTag) {
             [wSelf textViewEditMode];
-            wSelf.btnEmoji.tag = 999;
-            [wSelf.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
-            wSelf.emojiView.top = kTSScreenHeight;
+            [wSelf btnEmojiOriginalState];
         }
         else {
             [wSelf showEmojiView];
+            [wSelf textViewNormalState];
+            [wSelf btnVoiceOriginalState];
         }
-        
     }];
     
     self.btnKeyboard = [TSTools iconfontLabel:@"\U0000e602" size:30];
@@ -185,9 +178,6 @@
     [[RACSignal combineLatest:@[RACObserve(self, textView.text)]] subscribeNext:^(id x) {
         [wSelf.emojiView sendButtonHighlighted:(wSelf.textView.text.length > 0)];
     }];
-//    [[self.textView rac_textSignal] subscribeNext:^(id x) {
-//        [wSelf.emojiView sendButtonHighlighted:(wSelf.textView.text.length > 0)];
-//    }];
     
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(wSelf.btnVoice.mas_trailing).with.offset(buttonMargin);
@@ -200,20 +190,60 @@
 }
 
 
+- (void)textViewEditMode {
+    [self.textView becomeFirstResponder];
+}
 
+#pragma mark - States
 
-- (void)voiceToggled {
-    [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_key_btn_normal"] forState:UIControlStateNormal];
-    self.btnVoice.tag = 997;
-    
+- (void)btnAddOriginalState {
+    self.btnAdd.tag = btnNormalTag;
+    self.inputPlugInView.top = kTSScreenHeight;
+}
+- (void)btnEmojiOriginalState {
+    self.btnEmoji.tag = btnNormalTag;
+    self.emojiView.top = kTSScreenHeight;
+    [self.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
+}
+- (void)btnVoiceOriginalState {
+    self.btnVoice.tag = btnNormalTag;
+    [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_voice_btn_normal"] forState:UIControlStateNormal];
+}
+- (void)textViewNormalState {
+    self.textView.editable = YES;
+    self.textView.backgroundColor = [UIColor whiteColor];
+    self.textView.textAlignment = NSTextAlignmentLeft;
+    self.textView.tsState = TSTextViewStateNormal;
+    self.textView.selectable = YES;
+    self.textView.text = self.txtContent;
+}
+- (void)textViewButtonState {
     self.textView.editable = NO;
     self.textView.userInteractionEnabled = YES;
-    [self.textView resignFirstResponder];
     self.textView.backgroundColor = [UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:0.1];
     self.textView.text = @"按住 说话";
     self.textView.textAlignment = NSTextAlignmentCenter;
     self.textView.tsState = TSTextViewStateButton;
     self.textView.selectable = NO;
+}
+
+#pragma mark - Action
+- (void)voiceToggled {//dismiss keyboard
+    ______WS();
+    if (![self.textView isFirstResponder]) {
+        [UIView animateWithDuration:0.3 animations:^{
+            wSelf.toolBar.top = kTSScreenHeight - wSelf.toolBar.height;
+        }];
+    }
+    
+    [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_key_btn_normal"] forState:UIControlStateNormal];
+    self.btnVoice.tag = btnVoiceTag;
+    
+    self.txtContent = self.textView.text;
+    [self textViewButtonState];
+    [self btnEmojiOriginalState];
+    [self btnAddOriginalState];
+
     if (self.inputPlugInView.top < kTSScreenHeight) {
         [self hidePlugInView];
     }
@@ -223,38 +253,15 @@
 }
 
 - (void)keyboardToggled {
-//    self.btnVoice.hidden = NO;
-//    self.btnKeyboard.hidden = YES;
-    self.btnVoice.tag = 998;
-    [self.btnVoice setBackgroundImage:[UIImage imageNamed:@"chat_setmode_voice_btn_normal"] forState:UIControlStateNormal];
-    self.textView.editable = YES;
-    [self.textView becomeFirstResponder];
-    self.textView.backgroundColor = [UIColor whiteColor];
-    self.textView.text = @"";
-    self.textView.textAlignment = NSTextAlignmentLeft;
-    self.textView.tsState = TSTextViewStateNormal;
-    self.textView.selectable = YES;
-}
-
-- (void)textViewEditMode {
+    [self btnVoiceOriginalState];
+    [self textViewNormalState];
     [self.textView becomeFirstResponder];
 }
 
-#pragma mark - Action
-
-- (void)btnAddOriginalState {
-    self.btnAdd.tag = 999;
-    self.inputPlugInView.top = kTSScreenHeight;
-}
-- (void)btnEmojiOriginalState {
-    self.btnEmoji.tag = 999;
-    self.emojiView.top = kTSScreenHeight;
-    [self.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chatting_biaoqing_btn_normal"] forState:UIControlStateNormal];
-}
 - (void)showPlugInView {
     [self.textView resignFirstResponder];
     ______WS();
-    wSelf.btnAdd.tag = 158;
+    wSelf.btnAdd.tag = btnAddTag;
     [wSelf btnEmojiOriginalState];
     [UIView animateWithDuration:0.3 animations:^{
         wSelf.inputPlugInView.top = kTSScreenHeight - wSelf.inputPlugInView.height;
@@ -276,7 +283,7 @@
 - (void)showEmojiView {
     ______WS();
     [wSelf.textView resignFirstResponder];
-    wSelf.btnEmoji.tag = 157;
+    wSelf.btnEmoji.tag = btnEmojiTag;
     [wSelf btnAddOriginalState];
     [wSelf.btnEmoji setBackgroundImage:[UIImage imageNamed:@"chat_setmode_key_btn_normal"] forState:UIControlStateNormal];
     
@@ -328,19 +335,14 @@
 //    CGRect newFrame = self.tableView.frame;
 //    newFrame.origin.y -= (keyboardFrameBegin.origin.y - keyboardFrameEnd.origin.y);
 //    self.tableView.frame = newFrame;
-//    if (self.emojiView.top >= kTSScreenHeight) {
         self.toolBar.frame = CGRectMake(0,
                                         kTSScreenHeight-self.toolBar.height,
                                         self.toolBar.width,
                                         self.toolBar.height);
-//    }
+
     
     [UIView commitAnimations];
-//    [self.toolBar mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.equalTo(wSelf.view);
-//    }];
-//    [self.toolBar setNeedsLayout];
-//    [self.toolBar layoutIfNeeded];
+
 
 }
 #pragma mark - TSTextView
@@ -366,16 +368,24 @@
         
         textView.text = @"";
         [textView resignFirstResponder];
+        self.txtContent = self.textView.text;
     }
     
     return YES;
 }
-
-
+- (void)textViewDidChange:(UITextView *)textView {
+    self.txtContent = self.textView.text;
+}
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    [self btnEmojiOriginalState];
+    [self btnAddOriginalState];
+    return YES;
+}
 #pragma mark - TSEmojiView
 
 - (void)TSEmojiView:(TSEmojiView *)vEmoji emoji:(NSString *)emoji {
     self.textView.text = [self.textView.text stringByAppendingString:emoji];
+    self.txtContent = self.textView.text;
 }
 
 - (void)TSEmojiViewDeleteLast {
