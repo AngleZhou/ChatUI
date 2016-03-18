@@ -76,6 +76,8 @@
     self.tableView.dataSource = self;
     [self.tableView registerClass:[TalkCell class] forCellReuseIdentifier:@"TalkCell"];
     [self.tableView registerClass:[TSDateTimeCell class] forCellReuseIdentifier:TIMECELL];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissInput)];
+    [self.tableView addGestureRecognizer:tap];
     
     self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, kTSScreenHeight - toolBarMinHeight, kTSScreenWidth, toolBarMinHeight)];
     self.toolBar.backgroundColor = [UIColor grayColor];
@@ -345,6 +347,18 @@
 
 
 }
+
+- (void)dismissInput {
+    [self.textView resignFirstResponder];
+    if (self.emojiView.top < kTSScreenHeight) {
+        [self hideEmojiView];
+        [self btnEmojiOriginalState];
+    }
+    if (self.inputPlugInView.top < kTSScreenHeight) {
+        [self hidePlugInView];
+        [self btnAddOriginalState];
+    }
+}
 #pragma mark - TSTextView
 - (void)TSTextViewAddAudio:(NSURL *)audioPath {
     [self addDataToTableView:audioPath];
@@ -489,7 +503,10 @@
     return nil;
 }
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    //dismiss keyboard, emojiView, pluginView
+    [self.textView resignFirstResponder];
+}
 #pragma mark - getter
 
 - (NSMutableArray *)talks {
