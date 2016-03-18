@@ -28,6 +28,8 @@
 #define buttonMargin 10
 #define messageFontSize 19
 
+#define topBarHeight self.navigationController.navigationBar.height - [UIApplication sharedApplication].statusBarFrame.size.height
+
 #define btnVoiceTag  156
 #define btnEmojiTag  157
 #define btnAddTag    158
@@ -62,6 +64,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+    
 }
 
 - (void)dealloc {
@@ -70,7 +73,9 @@
 
 - (void)initUI {
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:(UITableViewStylePlain)];
+    
+    CGRect rect = [UIScreen mainScreen].bounds;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - toolBarMinHeight) style:(UITableViewStylePlain)];
     [self.view addSubview:self.tableView];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -252,6 +257,7 @@
     if (self.emojiView.top < kTSScreenHeight) {
         [self hideEmojiView];
     }
+    self.tableView.height = kTSScreenHeight-toolBarMinHeight;
 }
 
 - (void)keyboardToggled {
@@ -271,7 +277,8 @@
     } completion:^(BOOL finished) {
         wSelf.emojiView.top = kTSScreenHeight;
     }];
-    
+//    wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.inputPlugInView.height;
+    [self scrollToLastRow];
 }
 
 - (void)hidePlugInView {
@@ -295,6 +302,11 @@
     } completion:^(BOOL finished) {
         wSelf.inputPlugInView.top = kTSScreenHeight;
     }];
+    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - self.emojiView.size.height - topBarHeight)) {
+        wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.emojiView.height;
+        [self scrollToLastRow];
+    }
+    
 }
 - (void)hideEmojiView {
     ______WS();
@@ -321,30 +333,31 @@
                                     kTSScreenHeight - keyboardFrame.size.height - self.toolBar.height,
                                     self.toolBar.width,
                                     self.toolBar.height);
+    self.tableView.height = kTSScreenHeight - toolBarMinHeight - keyboardFrame.size.height;
+    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - keyboardFrame.size.height - topBarHeight)) {
+        [self scrollToLastRow];
+    }
+    
     [UIView commitAnimations];
 }
 - (void)keyboardHide:(NSNotification *)note {
     NSDictionary *userInfo = note.userInfo;
     NSTimeInterval animationDuration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    CGRect keyboardEndFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect keyboardBeginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:animationDuration];
     [UIView setAnimationCurve:animationCurve];
-//    CGRect keyboardFrameBegin = [self.tableView convertRect:keyboardBeginFrame toView:nil];
-//    CGRect keyboardFrameEnd = [self.tableView convertRect:keyboardEndFrame toView:nil];
-//    CGRect newFrame = self.tableView.frame;
-//    newFrame.origin.y -= (keyboardFrameBegin.origin.y - keyboardFrameEnd.origin.y);
-//    self.tableView.frame = newFrame;
+
+    if (self.emojiView.top == kTSScreenHeight && self.inputPlugInView.top == kTSScreenHeight) {
         self.toolBar.frame = CGRectMake(0,
                                         kTSScreenHeight-self.toolBar.height,
                                         self.toolBar.width,
                                         self.toolBar.height);
-
+        self.tableView.height = kTSScreenHeight - toolBarMinHeight;
+        [self scrollToLastRow];
+    }
     
     [UIView commitAnimations];
-
 
 }
 
@@ -379,10 +392,9 @@
                 [self addDataToTableView:textView.text];
             }
         }
-        
-        textView.text = @"";
-        [textView resignFirstResponder];
+        self.textView.text = @"";
         self.txtContent = self.textView.text;
+        return NO;
     }
     
     return YES;
@@ -421,11 +433,11 @@
 - (void)addDataToTableView:(id)item {
     NSDate *date = [NSDate date];
     __block NSDate *lastDate = nil;
-    [self.talks enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[NSDate class]]) {
-            lastDate = obj;
+    for (int i=0; i<self.talks.count; i++) {
+        if ([self.talks[i] isKindOfClass:[NSDate class]]) {
+            lastDate = self.talks[i];
         }
-    }];
+    }
 
     NSTimeInterval duration = [date timeIntervalSinceDate:lastDate];
     if (duration/60 > 2 || lastDate == nil) {
@@ -434,6 +446,12 @@
     
     [self.talks addObject:item];
     [self.tableView reloadData];
+    [self scrollToLastRow];
+}
+
+- (void)scrollToLastRow {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.talks.count-1) inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -505,7 +523,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     //dismiss keyboard, emojiView, pluginView
-    [self.textView resignFirstResponder];
+    [self dismissInput];
 }
 #pragma mark - getter
 
