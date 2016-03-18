@@ -277,10 +277,10 @@
     } completion:^(BOOL finished) {
         wSelf.emojiView.top = kTSScreenHeight;
     }];
-    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - self.inputPlugInView.size.height - topBarHeight)) {
-        wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.inputPlugInView.height;
-        [self scrollToLastRow];
-    }  
+
+    wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.inputPlugInView.height;
+    [self scrollToLastRow];
+    
 }
 
 - (void)hidePlugInView {
@@ -304,10 +304,10 @@
     } completion:^(BOOL finished) {
         wSelf.inputPlugInView.top = kTSScreenHeight;
     }];
-    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - self.emojiView.size.height - topBarHeight)) {
-        wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.emojiView.height;
-        [self scrollToLastRow];
-    }
+
+    wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.emojiView.height;
+    [self scrollToLastRow];
+    
     
 }
 - (void)hideEmojiView {
@@ -336,9 +336,9 @@
                                     self.toolBar.width,
                                     self.toolBar.height);
     self.tableView.height = kTSScreenHeight - toolBarMinHeight - keyboardFrame.size.height;
-    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - keyboardFrame.size.height - topBarHeight)) {
-        [self scrollToLastRow];
-    }
+
+    [self scrollToLastRow];
+    
     
     [UIView commitAnimations];
 }
@@ -368,10 +368,16 @@
     if (self.emojiView.top < kTSScreenHeight) {
         [self hideEmojiView];
         [self btnEmojiOriginalState];
+        self.toolBar.top = kTSScreenHeight-self.toolBar.height;
+        self.tableView.height = kTSScreenHeight - toolBarMinHeight;
+        [self scrollToLastRow];
     }
     if (self.inputPlugInView.top < kTSScreenHeight) {
         [self hidePlugInView];
         [self btnAddOriginalState];
+        self.toolBar.top = kTSScreenHeight-self.toolBar.height;
+        self.tableView.height = kTSScreenHeight - toolBarMinHeight;
+        [self scrollToLastRow];
     }
 }
 #pragma mark - TSTextView
@@ -452,8 +458,10 @@
 }
 
 - (void)scrollToLastRow {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.talks.count-1) inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    if (self.talks.count > 1) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.talks.count-1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
