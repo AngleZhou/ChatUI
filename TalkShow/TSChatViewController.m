@@ -277,8 +277,10 @@
     } completion:^(BOOL finished) {
         wSelf.emojiView.top = kTSScreenHeight;
     }];
-//    wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.inputPlugInView.height;
-    [self scrollToLastRow];
+    if (ceil(self.tableView.contentSize.height) >= ceil(kTSScreenHeight - toolBarMinHeight - self.inputPlugInView.size.height - topBarHeight)) {
+        wSelf.tableView.height = kTSScreenHeight - toolBarMinHeight - wSelf.inputPlugInView.height;
+        [self scrollToLastRow];
+    }  
 }
 
 - (void)hidePlugInView {
