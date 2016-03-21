@@ -7,6 +7,7 @@
 //
 
 #import "TSChatViewController.h"
+#import "TSTipView.h"
 #import "TSToolbarTextView.h"
 #import "TSDateTimeCell.h"
 #import "TSSave.h"
@@ -222,6 +223,7 @@
     self.textView.textAlignment = NSTextAlignmentLeft;
     self.textView.tsState = TSTextViewStateNormal;
     self.textView.selectable = YES;
+    self.textView.scrollEnabled = YES;
     self.textView.text = self.txtContent;
 }
 - (void)textViewButtonState {
@@ -229,6 +231,7 @@
     self.textView.userInteractionEnabled = YES;
     self.textView.backgroundColor = [UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:0.1];
     self.textView.text = @"按住 说话";
+    self.textView.scrollEnabled = NO;
     self.textView.textAlignment = NSTextAlignmentCenter;
     self.textView.tsState = TSTextViewStateButton;
     self.textView.selectable = NO;

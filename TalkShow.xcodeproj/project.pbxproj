@@ -34,6 +34,8 @@
 		B2BFB5D71C72BF54000B6C82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2BFB5D51C72BF54000B6C82 /* LaunchScreen.storyboard */; };
 		B2BFB5E21C72BF54000B6C82 /* TalkShowTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5E11C72BF54000B6C82 /* TalkShowTests.m */; };
 		B2BFB5ED1C72BF54000B6C82 /* TalkShowUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5EC1C72BF54000B6C82 /* TalkShowUITests.m */; };
+		B2C466B51C9FC75B0039C43E /* TSAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C466B41C9FC75B0039C43E /* TSAuthentication.m */; };
+		B2C466B91C9FE6580039C43E /* TSTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C466B81C9FE6580039C43E /* TSTipView.m */; };
 		B2EFB9F81C8574260022CA81 /* TSImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9F71C8574260022CA81 /* TSImagePicker.m */; };
 		B2EFB9FC1C85B6990022CA81 /* TSTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9FB1C85B6990022CA81 /* TSTextCell.m */; };
 		B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B2EFB9FE1C85C19E0022CA81 /* TSVoiceCell.m */; };
@@ -118,6 +120,10 @@
 		B2BFB5E81C72BF54000B6C82 /* TalkShowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TalkShowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2BFB5EC1C72BF54000B6C82 /* TalkShowUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TalkShowUITests.m; sourceTree = "<group>"; };
 		B2BFB5EE1C72BF54000B6C82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2C466B31C9FC75B0039C43E /* TSAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAuthentication.h; sourceTree = "<group>"; };
+		B2C466B41C9FC75B0039C43E /* TSAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAuthentication.m; sourceTree = "<group>"; };
+		B2C466B71C9FE6580039C43E /* TSTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSTipView.h; path = TipView/TSTipView.h; sourceTree = "<group>"; };
+		B2C466B81C9FE6580039C43E /* TSTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSTipView.m; path = TipView/TSTipView.m; sourceTree = "<group>"; };
 		B2EFB9F61C8574260022CA81 /* TSImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSImagePicker.h; path = InputView/TSImagePicker.h; sourceTree = "<group>"; };
 		B2EFB9F71C8574260022CA81 /* TSImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSImagePicker.m; path = InputView/TSImagePicker.m; sourceTree = "<group>"; };
 		B2EFB9FA1C85B6990022CA81 /* TSTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSTextCell.h; path = TalkCells/TSTextCell.h; sourceTree = "<group>"; };
@@ -255,6 +261,7 @@
 		B2BFB5C61C72BF54000B6C82 /* TalkShow */ = {
 			isa = PBXGroup;
 			children = (
+				B2C466B61C9FE6020039C43E /* TipView */,
 				B253DE501C89744E0027B2D7 /* 第三方 */,
 				B2EFB9F91C859C210022CA81 /* PluginsOfInput */,
 				B24FAEB11C77472000B8F523 /* InputView */,
@@ -268,6 +275,8 @@
 				B2BFB5CE1C72BF54000B6C82 /* TSChatViewController.m */,
 				B2FFB95A1C744EDD00F67FF7 /* TSToolbarTextView.h */,
 				B2FFB95B1C744EDD00F67FF7 /* TSToolbarTextView.m */,
+				B2C466B31C9FC75B0039C43E /* TSAuthentication.h */,
+				B2C466B41C9FC75B0039C43E /* TSAuthentication.m */,
 				B2FFB95F1C745F0B00F67FF7 /* TSSave.h */,
 				B2FFB9601C745F0B00F67FF7 /* TSSave.m */,
 				B2FFB9521C72FE7D00F67FF7 /* TalkShowConstant.h */,
@@ -306,6 +315,15 @@
 				B2BFB5EE1C72BF54000B6C82 /* Info.plist */,
 			);
 			path = TalkShowUITests;
+			sourceTree = "<group>";
+		};
+		B2C466B61C9FE6020039C43E /* TipView */ = {
+			isa = PBXGroup;
+			children = (
+				B2C466B71C9FE6580039C43E /* TSTipView.h */,
+				B2C466B81C9FE6580039C43E /* TSTipView.m */,
+			);
+			name = TipView;
 			sourceTree = "<group>";
 		};
 		B2EFB9F91C859C210022CA81 /* PluginsOfInput */ = {
@@ -550,6 +568,7 @@
 			files = (
 				B23801A91C803B1D000A60A5 /* TSTools.m in Sources */,
 				B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */,
+				B2C466B51C9FC75B0039C43E /* TSAuthentication.m in Sources */,
 				B2EFB9FC1C85B6990022CA81 /* TSTextCell.m in Sources */,
 				B2FFB96A1C74A75600F67FF7 /* ViewUtils.m in Sources */,
 				B299CE651C869B87002672CA /* TSImageCell.m in Sources */,
@@ -564,6 +583,7 @@
 				B2FFB95C1C744EDD00F67FF7 /* TSToolbarTextView.m in Sources */,
 				B2BFB5CC1C72BF54000B6C82 /* AppDelegate.m in Sources */,
 				B299CE6A1C869BB0002672CA /* TalkCell.m in Sources */,
+				B2C466B91C9FE6580039C43E /* TSTipView.m in Sources */,
 				B2BFB5C91C72BF54000B6C82 /* main.m in Sources */,
 				B253DE101C895AAC0027B2D7 /* TSEmojiView.m in Sources */,
 				B23801A61C80393C000A60A5 /* TSInputPluginModel.m in Sources */,
