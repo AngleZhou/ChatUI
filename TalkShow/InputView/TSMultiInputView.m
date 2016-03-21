@@ -29,7 +29,7 @@
     if (self) {
         CGRect frame = CGRectMake(0, 0, self.width, self.height);
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        CGFloat itemSpacing = (kTSScreenWidth - 4*kTSInputPluginCellWidth)/5;
+        CGFloat itemSpacing = floor((kTSScreenWidth - 4*(kTSInputPluginCellWidth))/5);
         layout.minimumInteritemSpacing = itemSpacing;
         layout.sectionInset = UIEdgeInsetsMake(12, itemSpacing, 0, itemSpacing);
         layout.itemSize = CGSizeMake(kTSInputPluginCellWidth, kTSInputPluginCellWidth+20);
@@ -70,13 +70,14 @@
     if (!cell) {
         cell = [[TSInputPluginCell alloc] initWithFrame:CGRectMake(0, 0, kTSInputPluginCellWidth, kTSInputPluginCellWidth)];
     }
-    cell.item = self.pluginItems[indexPath.row];
+    if (indexPath.row < self.pluginItems.count) {
+        cell.item = self.pluginItems[indexPath.row];
+    }
+    
     return cell;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    
-}
+
 
 
 @end
