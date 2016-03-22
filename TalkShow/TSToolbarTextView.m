@@ -21,6 +21,7 @@
 @property (nonatomic, strong) TSTipView *vTip;
 @property (nonatomic, strong) NSURL *fileURL;
 @property (nonatomic) BOOL touchUp;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 
@@ -29,19 +30,31 @@
 
 static long audioCount = 0;
 
+- (void)initTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+    self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.1 target:self selector:@selector(updateVolume) userInfo:nil repeats:YES];
+}
+
+- (void)updateVolume {
+    [self.recorder updateMeters];
+    float apow = [self.recorder peakPowerForChannel:2];
+    NSLog(@"%.3f", apow);
+}
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
         [self highlightedState];
-        if (!self.vTip) {
-            self.vTip = [TSTipView sharedInstance];
-            self.vTip.tip = @"手指上滑，取消发送";
-            self.vTip.image = [UIImage imageNamed:@"voice_volume0"];
-            [self.vTip showInCenter];
-        }
-        
         [self initAudio];
-        [self.recorder record];
+        if ([self.recorder record]) {
+            if (!self.vTip) {
+                self.vTip = [TSTipView sharedInstance];
+                self.vTip.tip = @"手指上滑，取消发送";
+                self.vTip.image = [UIImage imageNamed:@"voice_volume0"];
+                [self.vTip showInCenter];
+            }
+            
+        }
     }
 }
 
@@ -49,7 +62,8 @@ static long audioCount = 0;
     if (self.tsState == TSTextViewStateButton) {
         
         [self.recorder stop];
-        
+        [self.timer invalidate];
+        self.timer = nil;
         //当时间短于1秒时, 删除文件不保存
         AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
         CMTime audioDuration = audioAsset.duration;
@@ -102,8 +116,11 @@ static long audioCount = 0;
         self.recorder.delegate = self;
         self.recorder.meteringEnabled = YES;
         [self.recorder prepareToRecord];
+
     }
 }
+
+
 
 
 
