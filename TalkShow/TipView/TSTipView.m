@@ -15,34 +15,62 @@
 
 @implementation TSTipView
 
-- (instancetype)init {
-    CGRect rect = CGRectMake(0, 0, kTSScreenWidth/3, kTSScreenWidth/3);
-    return [self initWithFrame:rect];
++ (instancetype)sharedInstance {
+    static TSTipView *tipView;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tipView = [[TSTipView alloc] initPrivate];
+    });
+    if (tipView.superview) {
+        [tipView removeFromSuperview];
+    }
+    return tipView;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)initPrivate {
+    CGRect rect = CGRectMake(0, 0, kTSScreenWidth/3, kTSScreenWidth/3);
+    self = [super initWithFrame:rect];
     if (self) {
         self.backgroundColor = [UIColor blackColor];
         self.alpha = 0.5;
         self.layer.cornerRadius = 5;
         self.layer.masksToBounds = YES;
         
-        CGFloat width = (frame.size.width - 30*2);
+        CGFloat width = (rect.size.width - 30*2);
         CGRect rect = CGRectMake(30, 20, width, width);
         self.imageView = [[UIImageView alloc] initWithFrame:rect];
         [self addSubview:self.imageView];
+        ______WS();
+        [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(wSelf);
+            make.top.equalTo(wSelf).with.offset(30);
+        }];
         self.lblTip = [[UILabel alloc] init];
         self.lblTip.font = kTSFontRemark;
         self.lblTip.textAlignment = NSTextAlignmentCenter;
         self.lblTip.textColor = [UIColor whiteColor];
         [self addSubview:self.lblTip];
+        [self.lblTip mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(wSelf);
+            make.bottom.equalTo(wSelf).with.offset(-8);
+        }];
     }
     return self;
 }
 
+- (instancetype)init {
+    return [self initPrivate];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    return [self initPrivate];
+}
+
 - (void)setImage:(UIImage *)image {
     _image = image;
+    [self.imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(image.size);
+    }];
     self.imageView.image = image;
 }
 
@@ -51,10 +79,7 @@
     self.lblTip.text = tip;
     CGFloat maxWidth = self.width - 8*2;
     CGSize size = [tip textSizeWithFont:self.lblTip.font constrainedToSize:CGSizeMake(maxWidth, 99) lineBreakMode:NSLineBreakByWordWrapping];
-    ______WS();
-    [self.lblTip mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(wSelf);
-        make.bottom.equalTo(wSelf).with.offset(-8);
+    [self.lblTip mas_updateConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(size);
     }];
 }
@@ -71,5 +96,7 @@
         make.size.mas_equalTo(CGSizeMake(wSelf.width, wSelf.width));
     }];
 }
+
+
 
 @end

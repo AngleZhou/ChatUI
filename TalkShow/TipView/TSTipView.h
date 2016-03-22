@@ -12,6 +12,7 @@
 @property (nonatomic, strong) NSString *tip;
 @property (nonatomic, strong) UIImage *image;
 
++ (instancetype)sharedInstance;
 - (void)showInCenter;
 
 @end

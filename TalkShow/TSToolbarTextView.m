@@ -19,32 +19,22 @@
 @interface TSToolbarTextView () <AVAudioRecorderDelegate>
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) TSTipView *vTip;
+@property (nonatomic, strong) NSURL *fileURL;
+@property (nonatomic) BOOL touchUp;
 @end
 
 
 
 @implementation TSToolbarTextView
 
-static NSInteger audioCount = 0;
-
-//- (instancetype)init {
-//    return [self initWithFrame:CGRectZero];
-//}
-//- (instancetype)initWithFrame:(CGRect)frame {
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        _vTip = [[TSTipView alloc] init];
-//    }
-//    return self;
-//}
+static long audioCount = 0;
 
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
-        self.backgroundColor = TouchDownColor;
-        self.text = @"松开 结束";
+        [self highlightedState];
         if (!self.vTip) {
-            self.vTip = [[TSTipView alloc] init];
+            self.vTip = [TSTipView sharedInstance];
             self.vTip.tip = @"手指上滑，取消发送";
             self.vTip.image = [UIImage imageNamed:@"voice_volume0"];
             [self.vTip showInCenter];
@@ -57,18 +47,48 @@ static NSInteger audioCount = 0;
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
-        self.backgroundColor = TouchUpColor;
-        self.text = @"按住 说话";
+        
+        [self.recorder stop];
+        
+        //当时间短于1秒时, 删除文件不保存
+        AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
+        CMTime audioDuration = audioAsset.duration;
+        if ((1 - CMTimeGetSeconds(audioDuration)) > 0) {
+            //显示提示
+            self.vTip.image = [UIImage imageNamed:@"audio_press_short"];
+            self.vTip.tip = @"说话时间太短";
+            ______WS();
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf.vTip removeFromSuperview];
+                wSelf.vTip = nil;
+                [wSelf normalButtonState];
+            });
+            return;
+        }
+        
         [self.vTip removeFromSuperview];
         self.vTip = nil;
-        [self.recorder stop];
+        [self normalButtonState];
+        
         [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
     }
 }
 
+- (void)normalButtonState {//button状态，可以按
+    self.backgroundColor = TouchUpColor;
+    self.text = @"按住 说话";
+    self.userInteractionEnabled = YES;
+}
+- (void)highlightedState {//按住的状态
+    self.backgroundColor = TouchDownColor;
+    self.text = @"松开 结束";
+    self.userInteractionEnabled = NO;
+}
+
+
 - (void)initAudio {
     audioCount++;
-    NSURL *fileUrl = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
+    self.fileURL = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
     
     AVAudioSession *session = [AVAudioSession sharedInstance];
     if ([TSAuthentication canRecord]) {
@@ -78,7 +98,7 @@ static NSInteger audioCount = 0;
         NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),
                                                 AVSampleRateKey : @(44100.0),
                                                 AVNumberOfChannelsKey : @2} mutableCopy];
-        self.recorder = [[AVAudioRecorder alloc] initWithURL:fileUrl settings:recordSetting error:nil];
+        self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
         self.recorder.delegate = self;
         self.recorder.meteringEnabled = YES;
         [self.recorder prepareToRecord];
