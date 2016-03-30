@@ -33,13 +33,50 @@ static long audioCount = 0;
 - (void)initTimer {
     [self.timer invalidate];
     self.timer = nil;
-    self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.1 target:self selector:@selector(updateVolume) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateVolume) userInfo:nil repeats:YES];
+}
+- (void)invalidateTimer {
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 - (void)updateVolume {
     [self.recorder updateMeters];
-    float apow = [self.recorder peakPowerForChannel:2];
-    NSLog(@"%.3f", apow);
+    float decibels = [self.recorder averagePowerForChannel: 0];
+
+    float level;                // The linear 0.0 .. 1.0 value we need.
+    float minDecibels = -80.0f; // Or use -60dB, which I measured in a silent room.
+
+    if (decibels < minDecibels) {
+        level = 0.0f;
+    }
+    else if (decibels >= 0.0f) {
+        level = 1.0f;
+    }
+    else {
+        float   root            = 2.0f;
+        float   minAmp          = powf(10.0f, 0.05f * minDecibels);
+        float   inverseAmpRange = 1.0f / (1.0f - minAmp);
+        float   amp             = powf(10.0f, 0.05f * decibels);
+        float   adjAmp          = (amp - minAmp) * inverseAmpRange;
+        
+        level = powf(adjAmp, 1.0f / root);
+    }
+    float avg = level * 120;
+//    NSLog(@"平均值 %f", level * 120);
+    
+    if (0 < avg  && avg < 30) {
+        self.vTip.image = [UIImage imageNamed:@"voice_volume1"];
+    }
+    else if (30 <= avg && avg < 60) {
+        self.vTip.image = [UIImage imageNamed:@"voice_volume2"];
+    }
+    else if (60 <= avg && avg < 90) {
+        self.vTip.image = [UIImage imageNamed:@"voice_volume3"];
+    }
+    else if (90 <= avg && avg <= 120) {
+        self.vTip.image = [UIImage imageNamed:@"voice_volume4"];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -53,14 +90,14 @@ static long audioCount = 0;
                 self.vTip.image = [UIImage imageNamed:@"voice_volume0"];
                 [self.vTip showInCenter];
             }
-            
+            [self initTimer];
         }
     }
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
-        
+        [self invalidateTimer];
         [self.recorder stop];
         [self.timer invalidate];
         self.timer = nil;
@@ -106,7 +143,11 @@ static long audioCount = 0;
     
     AVAudioSession *session = [AVAudioSession sharedInstance];
     if ([TSAuthentication canRecord]) {
-        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:nil];
+        NSError *error;
+        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
+        if (error) {
+            NSLog(@"AVAudioSession setCategory error: %@", [error localizedDescription]);
+        }
         
         //define the recorder setting
         NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),

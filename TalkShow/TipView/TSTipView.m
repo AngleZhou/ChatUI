@@ -21,14 +21,11 @@
     dispatch_once(&onceToken, ^{
         tipView = [[TSTipView alloc] initPrivate];
     });
-    if (tipView.superview) {
-        [tipView removeFromSuperview];
-    }
     return tipView;
 }
 
 - (instancetype)initPrivate {
-    CGRect rect = CGRectMake(0, 0, kTSScreenWidth/3, kTSScreenWidth/3);
+    CGRect rect = CGRectMake(0, 0, 138, 138);
     self = [super initWithFrame:rect];
     if (self) {
         self.backgroundColor = [UIColor blackColor];
