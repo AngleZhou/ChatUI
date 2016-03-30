@@ -110,20 +110,6 @@ static long audioCount = 0;
         [self.recorder stop];
         [self.timer invalidate];
         self.timer = nil;
-        //当时间短于1秒时, 删除文件不保存
-        AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
-        CMTime audioDuration = audioAsset.duration;
-        if ((1 - CMTimeGetSeconds(audioDuration)) > 0) {
-            //显示提示
-            [self.vTip recordTooShortView];
-            ______WS();
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf.vTip removeFromSuperview];
-                wSelf.vTip = nil;
-                [wSelf normalButtonState];
-            });
-            return;
-        }
         
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
         UITouch *touch = [touches anyObject];
@@ -133,6 +119,20 @@ static long audioCount = 0;
             [self.recorder deleteRecording];
         }
         else {
+            //当时间短于1秒时, 删除文件不保存
+            AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
+            CMTime audioDuration = audioAsset.duration;
+            if ((1 - CMTimeGetSeconds(audioDuration)) > 0) {
+                //显示提示
+                [self.vTip recordTooShortView];
+                ______WS();
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf.vTip removeFromSuperview];
+                    wSelf.vTip = nil;
+                    [wSelf normalButtonState];
+                });
+                return;
+            }
             //保存录音
             [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
         }
@@ -168,6 +168,7 @@ static long audioCount = 0;
     self.backgroundColor = TouchDownColor;
     self.text = @"松开 结束";
     self.userInteractionEnabled = NO;
+    
 }
 
 

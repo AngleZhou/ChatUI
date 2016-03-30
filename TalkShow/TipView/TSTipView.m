@@ -78,7 +78,7 @@
     CGFloat maxWidth = self.width - 8*2;
     CGSize size = [tip textSizeWithFont:self.lblTip.font constrainedToSize:CGSizeMake(maxWidth, 99) lineBreakMode:NSLineBreakByWordWrapping];
     [self.lblTip mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(size);
+        make.size.mas_equalTo(CGSizeMake(size.width+8, size.height+8));
     }];
 }
 
@@ -102,8 +102,10 @@
     return NO;
 }
 - (void)recordingView {
+    self.lblTip.font = kTSFontRemark;
     self.tip = @"手指上滑，取消发送";
     self.lblTip.backgroundColor = [UIColor clearColor];
+    
     self.image = [UIImage imageNamed:@"voice_volume0"];
 }
 - (BOOL)isCancelRecordingView {
@@ -113,12 +115,17 @@
     return NO;
 }
 - (void)cancelRecordingView {
+    self.lblTip.font = kTSFontRemarkBold;
     self.tip = @"松开手指，取消发送";
-    self.lblTip.backgroundColor = [UIColor redColor];
+    self.lblTip.backgroundColor = [UIColor colorWithRed:128/255.0 green:0/255.0 blue:0/255.0 alpha:1];
+    
     self.image = [UIImage imageNamed:@"voice_record_cancel"];
 }
 - (void)recordTooShortView {
+    self.lblTip.font = kTSFontRemark;
+    self.lblTip.backgroundColor = [UIColor clearColor];
     self.tip = @"说话时间太短";
+    
     self.image = [UIImage imageNamed:@"audio_press_short"];
 }
 

@@ -45,6 +45,7 @@
 #define kTSFontMain [UIFont systemFontOfSize:15]
 #define kTSFontInputPluginCell [UIFont systemFontOfSize:13]
 #define kTSFontRemark [UIFont systemFontOfSize:13]
+#define kTSFontRemarkBold [UIFont boldSystemFontOfSize:13]
 #define kTSFontEmoji [UIFont systemFontOfSize:33]
 
 static NSString *SENDCELL = @"SendCell";
