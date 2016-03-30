@@ -22,6 +22,8 @@
 @property (nonatomic, strong) NSURL *fileURL;
 @property (nonatomic) BOOL touchUp;
 @property (nonatomic, strong) NSTimer *timer;
+
+@property (nonatomic) CGPoint startPoint;
 @end
 
 
@@ -41,59 +43,66 @@ static long audioCount = 0;
 }
 
 - (void)updateVolume {
-    [self.recorder updateMeters];
-    float decibels = [self.recorder averagePowerForChannel: 0];
-
-    float level;                // The linear 0.0 .. 1.0 value we need.
-    float minDecibels = -80.0f; // Or use -60dB, which I measured in a silent room.
-
-    if (decibels < minDecibels) {
-        level = 0.0f;
-    }
-    else if (decibels >= 0.0f) {
-        level = 1.0f;
-    }
-    else {
-        float   root            = 2.0f;
-        float   minAmp          = powf(10.0f, 0.05f * minDecibels);
-        float   inverseAmpRange = 1.0f / (1.0f - minAmp);
-        float   amp             = powf(10.0f, 0.05f * decibels);
-        float   adjAmp          = (amp - minAmp) * inverseAmpRange;
+    if ([self.vTip isRecordingView]) {
+        [self.recorder updateMeters];
+        float decibels = [self.recorder averagePowerForChannel: 0];
         
-        level = powf(adjAmp, 1.0f / root);
+        float level;                // The linear 0.0 .. 1.0 value we need.
+        float minDecibels = -80.0f; // Or use -60dB, which I measured in a silent room.
+        
+        if (decibels < minDecibels) {
+            level = 0.0f;
+        }
+        else if (decibels >= 0.0f) {
+            level = 1.0f;
+        }
+        else {
+            float   root            = 2.0f;
+            float   minAmp          = powf(10.0f, 0.05f * minDecibels);
+            float   inverseAmpRange = 1.0f / (1.0f - minAmp);
+            float   amp             = powf(10.0f, 0.05f * decibels);
+            float   adjAmp          = (amp - minAmp) * inverseAmpRange;
+            
+            level = powf(adjAmp, 1.0f / root);
+        }
+        float avg = level * 120;
+        //    NSLog(@"平均值 %f", level * 120);
+        
+        if (0 < avg  && avg < 30) {
+            self.vTip.image = [UIImage imageNamed:@"voice_volume1"];
+        }
+        else if (30 <= avg && avg < 60) {
+            self.vTip.image = [UIImage imageNamed:@"voice_volume2"];
+        }
+        else if (60 <= avg && avg < 90) {
+            self.vTip.image = [UIImage imageNamed:@"voice_volume3"];
+        }
+        else if (90 <= avg && avg <= 120) {
+            self.vTip.image = [UIImage imageNamed:@"voice_volume4"];
+        }
     }
-    float avg = level * 120;
-//    NSLog(@"平均值 %f", level * 120);
     
-    if (0 < avg  && avg < 30) {
-        self.vTip.image = [UIImage imageNamed:@"voice_volume1"];
-    }
-    else if (30 <= avg && avg < 60) {
-        self.vTip.image = [UIImage imageNamed:@"voice_volume2"];
-    }
-    else if (60 <= avg && avg < 90) {
-        self.vTip.image = [UIImage imageNamed:@"voice_volume3"];
-    }
-    else if (90 <= avg && avg <= 120) {
-        self.vTip.image = [UIImage imageNamed:@"voice_volume4"];
-    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
+        UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
+        UITouch *touch = [touches anyObject];
+        self.startPoint = [touch locationInView:vMain];
+        
         [self highlightedState];
         [self initAudio];
         if ([self.recorder record]) {
             if (!self.vTip) {
                 self.vTip = [TSTipView sharedInstance];
-                self.vTip.tip = @"手指上滑，取消发送";
-                self.vTip.image = [UIImage imageNamed:@"voice_volume0"];
+                [self.vTip recordingView];
                 [self.vTip showInCenter];
             }
             [self initTimer];
         }
     }
 }
+
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
@@ -106,8 +115,7 @@ static long audioCount = 0;
         CMTime audioDuration = audioAsset.duration;
         if ((1 - CMTimeGetSeconds(audioDuration)) > 0) {
             //显示提示
-            self.vTip.image = [UIImage imageNamed:@"audio_press_short"];
-            self.vTip.tip = @"说话时间太短";
+            [self.vTip recordTooShortView];
             ______WS();
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [wSelf.vTip removeFromSuperview];
@@ -117,11 +125,37 @@ static long audioCount = 0;
             return;
         }
         
+        UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
+        UITouch *touch = [touches anyObject];
+        CGPoint txLocation = [touch locationInView:vMain];
+        if ((self.startPoint.y - txLocation.y) > 60) {
+            //删除录音
+            [self.recorder deleteRecording];
+        }
+        else {
+            //保存录音
+            [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+        }
+        
         [self.vTip removeFromSuperview];
         self.vTip = nil;
         [self normalButtonState];
         
-        [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+        
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
+    UITouch *touch = [touches anyObject];
+    CGPoint txLocation = [touch locationInView:vMain];
+    if ((self.startPoint.y - txLocation.y) > 60 && ![self.vTip isCancelRecordingView]) {
+        //往上滑动，提示取消录音
+        [self.vTip cancelRecordingView];
+    }
+    else if((self.startPoint.y - txLocation.y) < 60 && ![self.vTip isRecordingView]) {
+        //提示录音
+        [self.vTip recordingView];
     }
 }
 

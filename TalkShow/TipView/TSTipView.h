@@ -15,4 +15,10 @@
 + (instancetype)sharedInstance;
 - (void)showInCenter;
 
+- (void)recordingView;
+- (void)cancelRecordingView;
+- (void)recordTooShortView;
+
+- (BOOL)isCancelRecordingView;
+- (BOOL)isRecordingView;
 @end

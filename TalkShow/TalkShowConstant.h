@@ -25,6 +25,7 @@
 #define kTSInputPluginTextColor [UIColor grayColor]
 #define kTSInputPluginViewBGColor [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
 
+#define toolBarMinHeight 50
 
 #define kTSScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kTSScreenHeight [UIScreen mainScreen].bounds.size.height

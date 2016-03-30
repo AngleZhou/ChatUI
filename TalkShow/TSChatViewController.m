@@ -22,7 +22,7 @@
 
 #import <Masonry.h>
 
-#define toolBarMinHeight 50
+
 #define textViewHeight 36
 #define actionButtonHeight 30
 #define actionButtonTopMargin (toolBarMinHeight - actionButtonHeight)/2
@@ -37,7 +37,7 @@
 #define btnNormalTag 999
 
 
-@interface TSChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate>
+@interface TSChatViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, AVAudioRecorderDelegate, TSTextViewDelegate, TSImagePickerDelegate, TSEmojiViewDelegate, UIScrollViewDelegate>
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic, strong) UIToolbar *toolBar;
 @property (nonatomic, strong) TSToolbarTextView *textView;
@@ -194,13 +194,13 @@
         make.bottom.equalTo(wSelf.toolBar).with.offset(-(toolBarMinHeight - textViewHeight)/2);
     }];
     
-  
 }
 
 
 - (void)textViewEditMode {
     [self.textView becomeFirstResponder];
 }
+
 
 #pragma mark - States
 
@@ -383,6 +383,10 @@
         [self scrollToLastRow];
     }
 }
+
+
+
+
 #pragma mark - TSTextView
 - (void)TSTextViewAddAudio:(NSURL *)audioPath {
     [self addDataToTableView:audioPath];

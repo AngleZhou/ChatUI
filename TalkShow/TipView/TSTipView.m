@@ -28,6 +28,7 @@
     CGRect rect = CGRectMake(0, 0, 138, 138);
     self = [super initWithFrame:rect];
     if (self) {
+        ______WS();
         self.backgroundColor = [UIColor blackColor];
         self.alpha = 0.5;
         self.layer.cornerRadius = 5;
@@ -37,7 +38,7 @@
         CGRect rect = CGRectMake(30, 20, width, width);
         self.imageView = [[UIImageView alloc] initWithFrame:rect];
         [self addSubview:self.imageView];
-        ______WS();
+        
         [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(wSelf);
             make.top.equalTo(wSelf).with.offset(30);
@@ -56,11 +57,11 @@
 }
 
 - (instancetype)init {
-    return [self initPrivate];
+    return [TSTipView sharedInstance];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self initPrivate];
+    return [TSTipView sharedInstance];
 }
 
 - (void)setImage:(UIImage *)image {
@@ -94,6 +95,32 @@
     }];
 }
 
+- (BOOL)isRecordingView {
+    if ([self.tip isEqualToString:@"手指上滑，取消发送"]) {
+        return YES;
+    }
+    return NO;
+}
+- (void)recordingView {
+    self.tip = @"手指上滑，取消发送";
+    self.lblTip.backgroundColor = [UIColor clearColor];
+    self.image = [UIImage imageNamed:@"voice_volume0"];
+}
+- (BOOL)isCancelRecordingView {
+    if ([self.tip isEqualToString:@"松开手指，取消发送"]) {
+        return YES;
+    }
+    return NO;
+}
+- (void)cancelRecordingView {
+    self.tip = @"松开手指，取消发送";
+    self.lblTip.backgroundColor = [UIColor redColor];
+    self.image = [UIImage imageNamed:@"voice_record_cancel"];
+}
+- (void)recordTooShortView {
+    self.tip = @"说话时间太短";
+    self.image = [UIImage imageNamed:@"audio_press_short"];
+}
 
 
 @end
