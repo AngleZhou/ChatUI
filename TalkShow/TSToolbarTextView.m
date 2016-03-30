@@ -118,7 +118,7 @@ static long audioCount = 0;
 
 - (void)initTimerTouch {
     [self invalidateTimerTouch];
-    self.timerTouch = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(initTimer) userInfo:nil repeats:NO];
+    self.timerTouch = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(initTimer) userInfo:nil repeats:NO];
 }
 - (void)invalidateTimerTouch {
     [self.timerTouch invalidate];
