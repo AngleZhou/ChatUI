@@ -20,7 +20,7 @@
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) TSTipView *vTip;
 @property (nonatomic, strong) NSURL *fileURL;
-@property (nonatomic) BOOL touchUp;
+@property (nonatomic) BOOL bCounting;
 @property (nonatomic, strong) NSTimer *timerVolume;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *timerTouch;
@@ -45,7 +45,7 @@ static long audioCount = 0;
 }
 
 - (void)updateVolume {
-    if ([self.vTip isRecordingView]) {
+    if ([self.vTip isRecordingView] && !self.bCounting) {
         [self.recorder updateMeters];
         float decibels = [self.recorder averagePowerForChannel: 0];
         
@@ -89,7 +89,7 @@ static long audioCount = 0;
 - (void)initTimer {
     [self invalidateTimer];
     [self invalidateTimerTouch];
-    
+    self.bCounting = YES;
     self.count = 10;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(counting) userInfo:nil repeats:YES];
 }
