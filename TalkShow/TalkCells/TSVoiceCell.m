@@ -82,7 +82,7 @@
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileUrl options:nil];
     CMTime audioDuration = audioAsset.duration;
     int audioDurationSeconds = (int)ceil(CMTimeGetSeconds(audioDuration));
-    self.audioLength = audioDurationSeconds;
+    self.audioLength = audioDurationSeconds - 1;
     NSString *voiceLength = [NSString stringWithFormat:@"%d\"", audioDurationSeconds];
     NSInteger contentWidth = 0;
     if (audioDurationSeconds == 1) {

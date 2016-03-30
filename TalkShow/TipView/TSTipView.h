@@ -11,6 +11,7 @@
 @interface TSTipView : UIView
 @property (nonatomic, strong) NSString *tip;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSString *imageTip;
 
 + (instancetype)sharedInstance;
 - (void)showInCenter;

@@ -21,7 +21,10 @@
 @property (nonatomic, strong) TSTipView *vTip;
 @property (nonatomic, strong) NSURL *fileURL;
 @property (nonatomic) BOOL touchUp;
+@property (nonatomic, strong) NSTimer *timerVolume;
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *timerTouch;
+@property (nonatomic) NSInteger count;
 
 @property (nonatomic) CGPoint startPoint;
 @end
@@ -32,14 +35,13 @@
 
 static long audioCount = 0;
 
-- (void)initTimer {
-    [self.timer invalidate];
-    self.timer = nil;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateVolume) userInfo:nil repeats:YES];
+- (void)initTimerVolume {
+    [self invalidateTimerVolume];
+    self.timerVolume = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateVolume) userInfo:nil repeats:YES];
 }
-- (void)invalidateTimer {
-    [self.timer invalidate];
-    self.timer = nil;
+- (void)invalidateTimerVolume {
+    [self.timerVolume invalidate];
+    self.timerVolume = nil;
 }
 
 - (void)updateVolume {
@@ -84,6 +86,46 @@ static long audioCount = 0;
     
 }
 
+- (void)initTimer {
+    [self invalidateTimer];
+    [self invalidateTimerTouch];
+    
+    self.count = 10;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(counting) userInfo:nil repeats:YES];
+}
+- (void)counting {
+    if (self.count == 0) {//倒计时结束，
+        [self invalidateTimerVolume];
+        [self invalidateTimer];
+        [self.recorder stop];
+        
+        [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+        
+        [self.vTip removeFromSuperview];
+        self.vTip = nil;
+        [self normalButtonState];
+    }
+    else {
+        self.vTip.imageTip = [NSString stringWithFormat:@"%d", self.count];
+    }
+    self.count--;
+}
+- (void)invalidateTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+
+- (void)initTimerTouch {
+    [self invalidateTimerTouch];
+    self.timerTouch = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(initTimer) userInfo:nil repeats:NO];
+}
+- (void)invalidateTimerTouch {
+    [self.timerTouch invalidate];
+    self.timerTouch = nil;
+}
+
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
@@ -93,12 +135,14 @@ static long audioCount = 0;
         [self highlightedState];
         [self initAudio];
         if ([self.recorder record]) {
+            [self initTimerTouch];
+            [self initTimerVolume];
             if (!self.vTip) {
                 self.vTip = [TSTipView sharedInstance];
                 [self.vTip recordingView];
                 [self.vTip showInCenter];
             }
-            [self initTimer];
+ 
         }
     }
 }
@@ -106,10 +150,11 @@ static long audioCount = 0;
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
+        [self invalidateTimerVolume];
         [self invalidateTimer];
+        [self invalidateTimerTouch];
+        
         [self.recorder stop];
-        [self.timer invalidate];
-        self.timer = nil;
         
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
         UITouch *touch = [touches anyObject];
@@ -145,7 +190,16 @@ static long audioCount = 0;
     }
 }
 
+
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
+    CMTime audioDuration = audioAsset.duration;
+    double length = CMTimeGetSeconds(audioDuration);
+    BOOL bCount = NO;
+    if (length - 50 > 0) {//如果录音长度超过50秒，开始倒计时
+        [self initTimer];
+        bCount = YES;
+    }
     UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     UITouch *touch = [touches anyObject];
     CGPoint txLocation = [touch locationInView:vMain];
@@ -154,9 +208,16 @@ static long audioCount = 0;
         [self.vTip cancelRecordingView];
     }
     else if((self.startPoint.y - txLocation.y) < 60 && ![self.vTip isRecordingView]) {
-        //提示录音
-        [self.vTip recordingView];
+        if (bCount == NO) {
+            //提示录音
+            [self.vTip recordingView];
+        }
+        else {
+            self.vTip.imageTip = [NSString stringWithFormat:@"%d", self.count];
+        }
     }
+
+   
 }
 
 - (void)normalButtonState {//button状态，可以按

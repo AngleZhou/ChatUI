@@ -13,10 +13,14 @@
 @property (nonatomic, strong) UILabel *lblImage;
 @property (nonatomic, strong) UILabel *lblTip;
 
-@property (nonatomic, strong) NSString *imageTip;
+
+
+
 @end
 
 @implementation TSTipView
+
+#pragma mark - Init
 
 + (instancetype)sharedInstance {
     static TSTipView *tipView;
@@ -79,6 +83,23 @@
     return [TSTipView sharedInstance];
 }
 
+#pragma mark - Action
+
+- (void)showInCenter {
+    UIView *vRoot = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    [vRoot addSubview:self];
+    self.layer.zPosition = 2;
+    ______WX(vRoot, wvRoot);
+    ______WS();
+    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(wvRoot);
+        make.centerY.equalTo(wvRoot);
+        make.size.mas_equalTo(CGSizeMake(wSelf.width, wSelf.width));
+    }];
+}
+
+#pragma mark - Setter
+
 - (void)setImage:(UIImage *)image {
     _image = image;
     self.imageView.hidden = NO;
@@ -110,18 +131,9 @@
     }];
 }
 
-- (void)showInCenter {
-    UIView *vRoot = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    [vRoot addSubview:self];
-    self.layer.zPosition = 2;
-    ______WX(vRoot, wvRoot);
-    ______WS();
-    [self mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(wvRoot);
-        make.centerY.equalTo(wvRoot);
-        make.size.mas_equalTo(CGSizeMake(wSelf.width, wSelf.width));
-    }];
-}
+
+
+#pragma mark - State Views
 
 - (BOOL)isRecordingView {
     if ([self.tip isEqualToString:@"手指上滑，取消发送"]) {
@@ -157,6 +169,8 @@
     self.imageTip = @"!";
 //    self.image = [UIImage imageNamed:@"audio_press_short"];
 }
+
+
 
 
 @end
