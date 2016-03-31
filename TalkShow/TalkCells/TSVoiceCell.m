@@ -7,17 +7,16 @@
 //
 
 #import "TSVoiceCell.h"
-#import <AVFoundation/AVFoundation.h>
+#import "TSAudioUtils.h"
 
 #define MaxAudioCellWidth 150
 #define MinAudioCellWidth 40
 #define MinCellHeight 34
 
-@interface TSVoiceCell () <AVAudioPlayerDelegate>
+@interface TSVoiceCell () 
 @property (nonatomic, strong) UILabel        *lblVoiceLength;
 @property (nonatomic, strong) UIImageView    *vSound;
 @property (nonatomic        ) NSTimeInterval audioLength;
-@property (nonatomic, strong) AVAudioPlayer  *player;
 @end
 
 @implementation TSVoiceCell
@@ -78,10 +77,7 @@
     else {
         self.vSound.image = soundImage;
     }
-    
-    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileUrl options:nil];
-    CMTime audioDuration = audioAsset.duration;
-    int audioDurationSeconds = (int)floor(CMTimeGetSeconds(audioDuration));
+    int audioDurationSeconds = [[TSAudioUtils sharedInstance] lengthOfUrl:self.fileUrl];
     self.audioLength = audioDurationSeconds - 1;
     NSString *voiceLength = [NSString stringWithFormat:@"%d\"", (audioDurationSeconds-1)];
     NSInteger contentWidth = 0;
@@ -110,12 +106,18 @@
 
 
 - (void)playAudio {
-    self.vBubble.image = self.msgBubbleImage.highlightedImage;
+    TSAudioUtils *util = [TSAudioUtils sharedInstance];
+    if ([util.player isPlaying]) {
+        [util.player stop];
+        self.vBubble.image = self.msgBubbleImage.image;
+        [self.vSound.layer removeAllAnimations];
+    }
+    else {
+        [util playerWithUrl:self.fileUrl];
+        self.vBubble.image = self.msgBubbleImage.highlightedImage;
+        [self playAudioAnimation];
+    }
     
-    self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:self.fileUrl error:nil];
-    self.player.delegate = self;
-    [self.player play];
-    [self playAudioAnimation];
 }
 
 - (void)playAudioAnimation {

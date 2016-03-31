@@ -9,7 +9,7 @@
 #import "TSToolbarTextView.h"
 #import "TSSave.h"
 #import "TSTipView.h"
-#import "TSAudioUitls.h"
+#import "TSAudioUtils.h"
 
 
 
@@ -47,7 +47,7 @@
 
 - (void)updateVolume {
     if ([self.vTip isRecordingView] && !self.bCounting) {
-        float decibels = [[TSAudioUitls sharedInstance] decibels];
+        float decibels = [[TSAudioUtils sharedInstance] decibels];
         
         float level;                // The linear 0.0 .. 1.0 value we need.
         float minDecibels = -80.0f; // Or use -60dB, which I measured in a silent room.
@@ -98,9 +98,9 @@
         self.bEnd = YES;
         [self invalidateTimerVolume];
         [self invalidateTimer];
-        [[TSAudioUitls sharedInstance] stop];
+        [[TSAudioUtils sharedInstance] stopRecord];
         
-        [self.delegatets TSTextViewAddAudio:[[TSAudioUitls sharedInstance] filePath]];
+        [self.delegatets TSTextViewAddAudio:[[TSAudioUtils sharedInstance] filePath]];
         
         [self.vTip removeFromSuperview];
         self.vTip = nil;
@@ -134,7 +134,7 @@
         self.startPoint = [touch locationInView:vMain];
         
         [self highlightedState];
-        if ([[TSAudioUitls sharedInstance] record]) {
+        if ([[TSAudioUtils sharedInstance] record]) {
             [self initTimerTouch];
             [self initTimerVolume];
             if (!self.vTip) {
@@ -154,19 +154,19 @@
         [self invalidateTimer];
         [self invalidateTimerTouch];
         
-        [[TSAudioUitls sharedInstance] stop];
+        [[TSAudioUtils sharedInstance] stopRecord];
         
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
         UITouch *touch = [touches anyObject];
         CGPoint txLocation = [touch locationInView:vMain];
         if ((self.startPoint.y - txLocation.y) > 60) {
             //删除录音
-            [[TSAudioUitls sharedInstance] deleteRecording];
+            [[TSAudioUtils sharedInstance] deleteRecording];
         }
         else {
             //当时间短于1秒时, 删除文件不保存
-           
-            if ((1 - [[TSAudioUitls sharedInstance] audioLength]) > 0) {
+            TSAudioUtils *util = [TSAudioUtils sharedInstance];
+            if ((1 - [util lengthOfUrl:util.filePath]) > 0) {
                 //显示提示
                 [self.vTip recordTooShortView];
                 ______WS();
@@ -178,7 +178,7 @@
                 return;
             }
             //保存录音
-            [self.delegatets TSTextViewAddAudio:[[TSAudioUitls sharedInstance] filePath]];
+            [self.delegatets TSTextViewAddAudio:[[TSAudioUtils sharedInstance] filePath]];
         }
         
         [self.vTip removeFromSuperview];
@@ -192,7 +192,8 @@
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL bCount = NO;
-    if ([[TSAudioUitls sharedInstance] audioLength] - 50 > 0) {//如果录音长度超过50秒，开始倒计时
+    TSAudioUtils *util = [TSAudioUtils sharedInstance];
+    if ([util lengthOfUrl:util.filePath] - 50 > 0) {//如果录音长度超过50秒，开始倒计时
         [self initTimer];
         bCount = YES;
     }
