@@ -9,17 +9,15 @@
 #import "TSToolbarTextView.h"
 #import "TSSave.h"
 #import "TSTipView.h"
-#import <AVFoundation/AVFoundation.h>
-#import "TSAuthentication.h"
+#import "TSAudioUitls.h"
+
 
 
 #define TouchDownColor [UIColor grayColor]
 #define TouchUpColor [UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:0.1]
 
-@interface TSToolbarTextView () <AVAudioRecorderDelegate>
-@property (nonatomic, strong) AVAudioRecorder *recorder;
+@interface TSToolbarTextView ()
 @property (nonatomic, strong) TSTipView *vTip;
-@property (nonatomic, strong) NSURL *fileURL;
 @property (nonatomic) BOOL bCounting;
 @property (nonatomic) BOOL bEnd;
 @property (nonatomic, strong) NSTimer *timerVolume;
@@ -34,7 +32,7 @@
 
 @implementation TSToolbarTextView
 
-static long audioCount = 0;
+
 
 #pragma mark - Timer
 
@@ -49,8 +47,7 @@ static long audioCount = 0;
 
 - (void)updateVolume {
     if ([self.vTip isRecordingView] && !self.bCounting) {
-        [self.recorder updateMeters];
-        float decibels = [self.recorder averagePowerForChannel: 0];
+        float decibels = [[TSAudioUitls sharedInstance] decibels];
         
         float level;                // The linear 0.0 .. 1.0 value we need.
         float minDecibels = -80.0f; // Or use -60dB, which I measured in a silent room.
@@ -101,16 +98,16 @@ static long audioCount = 0;
         self.bEnd = YES;
         [self invalidateTimerVolume];
         [self invalidateTimer];
-        [self.recorder stop];
+        [[TSAudioUitls sharedInstance] stop];
         
-        [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+        [self.delegatets TSTextViewAddAudio:[[TSAudioUitls sharedInstance] filePath]];
         
         [self.vTip removeFromSuperview];
         self.vTip = nil;
         [self normalButtonState];
     }
     else {
-        self.vTip.imageTip = [NSString stringWithFormat:@"%d", self.count];
+        self.vTip.imageTip = [NSString stringWithFormat:@"%ld", (long)self.count];
     }
     self.count--;
 }
@@ -137,8 +134,7 @@ static long audioCount = 0;
         self.startPoint = [touch locationInView:vMain];
         
         [self highlightedState];
-        [self initAudio];
-        if ([self.recorder record]) {
+        if ([[TSAudioUitls sharedInstance] record]) {
             [self initTimerTouch];
             [self initTimerVolume];
             if (!self.vTip) {
@@ -158,20 +154,19 @@ static long audioCount = 0;
         [self invalidateTimer];
         [self invalidateTimerTouch];
         
-        [self.recorder stop];
+        [[TSAudioUitls sharedInstance] stop];
         
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
         UITouch *touch = [touches anyObject];
         CGPoint txLocation = [touch locationInView:vMain];
         if ((self.startPoint.y - txLocation.y) > 60) {
             //删除录音
-            [self.recorder deleteRecording];
+            [[TSAudioUitls sharedInstance] deleteRecording];
         }
         else {
             //当时间短于1秒时, 删除文件不保存
-            AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
-            CMTime audioDuration = audioAsset.duration;
-            if ((1 - CMTimeGetSeconds(audioDuration)) > 0) {
+           
+            if ((1 - [[TSAudioUitls sharedInstance] audioLength]) > 0) {
                 //显示提示
                 [self.vTip recordTooShortView];
                 ______WS();
@@ -183,7 +178,7 @@ static long audioCount = 0;
                 return;
             }
             //保存录音
-            [self.delegatets TSTextViewAddAudio:[TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]]];
+            [self.delegatets TSTextViewAddAudio:[[TSAudioUitls sharedInstance] filePath]];
         }
         
         [self.vTip removeFromSuperview];
@@ -196,11 +191,8 @@ static long audioCount = 0;
 
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:self.fileURL options:nil];
-    CMTime audioDuration = audioAsset.duration;
-    double length = CMTimeGetSeconds(audioDuration);
     BOOL bCount = NO;
-    if (length - 50 > 0) {//如果录音长度超过50秒，开始倒计时
+    if ([[TSAudioUitls sharedInstance] audioLength] - 50 > 0) {//如果录音长度超过50秒，开始倒计时
         [self initTimer];
         bCount = YES;
     }
@@ -237,29 +229,7 @@ static long audioCount = 0;
 }
 
 
-- (void)initAudio {
-    audioCount++;
-    self.fileURL = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
-    
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    if ([TSAuthentication canRecord]) {
-        NSError *error;
-        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
-        if (error) {
-            NSLog(@"AVAudioSession setCategory error: %@", [error localizedDescription]);
-        }
-        
-        //define the recorder setting
-        NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),
-                                                AVSampleRateKey : @(44100.0),
-                                                AVNumberOfChannelsKey : @2} mutableCopy];
-        self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
-        self.recorder.delegate = self;
-        self.recorder.meteringEnabled = YES;
-        [self.recorder prepareToRecord];
 
-    }
-}
 
 
 
