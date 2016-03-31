@@ -21,6 +21,7 @@
 @property (nonatomic, strong) TSTipView *vTip;
 @property (nonatomic, strong) NSURL *fileURL;
 @property (nonatomic) BOOL bCounting;
+@property (nonatomic) BOOL bEnd;
 @property (nonatomic, strong) NSTimer *timerVolume;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *timerTouch;
@@ -34,6 +35,8 @@
 @implementation TSToolbarTextView
 
 static long audioCount = 0;
+
+#pragma mark - Timer
 
 - (void)initTimerVolume {
     [self invalidateTimerVolume];
@@ -95,6 +98,7 @@ static long audioCount = 0;
 }
 - (void)counting {
     if (self.count == 0) {//倒计时结束，
+        self.bEnd = YES;
         [self invalidateTimerVolume];
         [self invalidateTimer];
         [self.recorder stop];
@@ -118,7 +122,7 @@ static long audioCount = 0;
 
 - (void)initTimerTouch {
     [self invalidateTimerTouch];
-    self.timerTouch = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(initTimer) userInfo:nil repeats:NO];
+    self.timerTouch = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(initTimer) userInfo:nil repeats:NO];
 }
 - (void)invalidateTimerTouch {
     [self.timerTouch invalidate];
@@ -149,7 +153,7 @@ static long audioCount = 0;
 
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.tsState == TSTextViewStateButton) {
+    if (self.tsState == TSTextViewStateButton && !self.bEnd) {
         [self invalidateTimerVolume];
         [self invalidateTimer];
         [self invalidateTimerTouch];
@@ -213,7 +217,7 @@ static long audioCount = 0;
             [self.vTip recordingView];
         }
         else {
-            self.vTip.imageTip = [NSString stringWithFormat:@"%d", self.count];
+            self.vTip.imageTip = [NSString stringWithFormat:@"%ld", (long)self.count];
         }
     }
 
