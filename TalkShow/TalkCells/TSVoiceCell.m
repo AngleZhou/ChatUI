@@ -62,6 +62,8 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playAudio)];
         self.vBubble.userInteractionEnabled = YES;
         [self.vBubble addGestureRecognizer:tap];
+        
+        
     }
     return self;
 }
@@ -78,8 +80,8 @@
         self.vSound.image = soundImage;
     }
     int audioDurationSeconds = [[TSAudioUtils sharedInstance] lengthOfUrl:self.fileUrl];
-    self.audioLength = audioDurationSeconds - 1;
-    NSString *voiceLength = [NSString stringWithFormat:@"%d\"", (audioDurationSeconds-1)];
+    self.audioLength = audioDurationSeconds;
+    NSString *voiceLength = [NSString stringWithFormat:@"%d\"", (audioDurationSeconds)];
     NSInteger contentWidth = 0;
     if (audioDurationSeconds == 1) {
         contentWidth = MinAudioCellWidth;
@@ -106,6 +108,13 @@
 
 
 - (void)playAudio {
+    ______WS();
+    [[RACObserve([TSAudioUtils sharedInstance].player, rate) takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
+        if ([TSAudioUtils sharedInstance].player.rate - 0.00 < 0.01) {
+            wSelf.vBubble.image = wSelf.msgBubbleImage.image;
+            [wSelf.vSound.layer removeAllAnimations];
+        }
+    }];
     TSAudioUtils *util = [TSAudioUtils sharedInstance];
     if ([util.player isPlaying]) {
         [util.player stop];

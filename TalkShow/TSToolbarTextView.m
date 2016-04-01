@@ -19,7 +19,7 @@
 @interface TSToolbarTextView ()
 @property (nonatomic, strong) TSTipView *vTip;
 @property (nonatomic) BOOL bCounting;
-@property (nonatomic) BOOL bEnd;
+@property (nonatomic) BOOL bEndCount;
 @property (nonatomic, strong) NSTimer *timerVolume;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *timerTouch;
@@ -95,7 +95,7 @@
 }
 - (void)counting {
     if (self.count == 0) {//倒计时结束，
-        self.bEnd = YES;
+        self.bEndCount = YES;
         [self invalidateTimerVolume];
         [self invalidateTimer];
         [[TSAudioUtils sharedInstance] stopRecord];
@@ -129,6 +129,8 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.tsState == TSTextViewStateButton) {
+        self.bCounting = NO;
+        self.bEndCount = NO;
         UIView *vMain = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
         UITouch *touch = [touches anyObject];
         self.startPoint = [touch locationInView:vMain];
@@ -149,7 +151,7 @@
 
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.tsState == TSTextViewStateButton && !self.bEnd) {
+    if (self.tsState == TSTextViewStateButton && !self.bEndCount) {
         [self invalidateTimerVolume];
         [self invalidateTimer];
         [self invalidateTimerTouch];
