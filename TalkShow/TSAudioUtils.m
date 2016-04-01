@@ -68,6 +68,10 @@ static long audioCount = 0;
             [self.recorder stop];
             self.recorder = nil;
         }
+        if (self.player) {
+            [self.player stop];
+            self.player = nil;
+        }
         self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
         self.recorder.delegate = self;
         self.recorder.meteringEnabled = YES;
@@ -92,7 +96,6 @@ static long audioCount = 0;
     if (self.player) {
         [self.player stop];
         self.player = nil;
-        NSLog(@"util player: %@", self.player);
     }
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:self.fileURL error:nil];
     
