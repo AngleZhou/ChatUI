@@ -109,23 +109,28 @@
 
 - (void)playAudio {
     ______WS();
-    [[RACObserve([TSAudioUtils sharedInstance].player, rate) takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
-        if ([TSAudioUtils sharedInstance].player.rate - 0.00 < 0.01) {
+    
+    TSAudioUtils *util = [TSAudioUtils sharedInstance];
+    BOOL bePlaying = [util.player isPlaying];
+    BOOL isNewUrl = ![util.player.url.absoluteString isEqualToString:self.fileUrl.absoluteString];
+    
+    if (bePlaying && !isNewUrl) {
+        [util.player stop];
+        util.player = nil;
+        self.vBubble.image = self.msgBubbleImage.image;
+        [self.vSound.layer removeAllAnimations];
+        return;
+    }
+    
+    [util playerWithUrl:self.fileUrl];
+    [[RACObserve([TSAudioUtils sharedInstance], player) takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
+        if (x == nil) {
             wSelf.vBubble.image = wSelf.msgBubbleImage.image;
             [wSelf.vSound.layer removeAllAnimations];
         }
     }];
-    TSAudioUtils *util = [TSAudioUtils sharedInstance];
-    if ([util.player isPlaying]) {
-        [util.player stop];
-        self.vBubble.image = self.msgBubbleImage.image;
-        [self.vSound.layer removeAllAnimations];
-    }
-    else {
-        [util playerWithUrl:self.fileUrl];
-        self.vBubble.image = self.msgBubbleImage.highlightedImage;
-        [self playAudioAnimation];
-    }
+    self.vBubble.image = self.msgBubbleImage.highlightedImage;
+    [self playAudioAnimation];
     
 }
 

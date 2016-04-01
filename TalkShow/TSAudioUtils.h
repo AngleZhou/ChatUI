@@ -22,5 +22,5 @@
 - (int)lengthOfUrl:(NSURL *)url;
 - (NSURL *)filePath;
 
-- (void)playerWithUrl:(NSURL *)url;
+- (AVAudioPlayer *)playerWithUrl:(NSURL *)url;
 @end

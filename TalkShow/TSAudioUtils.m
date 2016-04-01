@@ -64,6 +64,10 @@ static long audioCount = 0;
         NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),
                                                 AVSampleRateKey : @(44100.0),
                                                 AVNumberOfChannelsKey : @2} mutableCopy];
+        if (self.recorder) {
+            [self.recorder stop];
+            self.recorder = nil;
+        }
         self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
         self.recorder.delegate = self;
         self.recorder.meteringEnabled = YES;
@@ -71,6 +75,7 @@ static long audioCount = 0;
         
         if ([self.player isPlaying]) {
             [self.player stop];
+            NSLog(@"rate: %d", self.player.isPlaying);
         }
         if (![self.recorder isRecording]) {
             NSError *error;
@@ -82,11 +87,19 @@ static long audioCount = 0;
     return NO;
 }
 
-- (void)playerWithUrl:(NSURL *)url {
+- (AVAudioPlayer *)playerWithUrl:(NSURL *)url {
     self.fileURL = url;
+    if (self.player) {
+        [self.player stop];
+        self.player = nil;
+        NSLog(@"util player: %@", self.player);
+    }
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:self.fileURL error:nil];
+    
     self.player.delegate = self;
     [self.player play];
+
+    return self.player;
 }
 
 - (void)stopRecord {
@@ -163,5 +176,9 @@ static long audioCount = 0;
     return hasHeadset;
 } 
 
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    NSLog(@"%d, %d", player.isPlaying, flag);
+    self.player = nil;
+}
 
 @end
