@@ -24,6 +24,9 @@ typedef NS_ENUM(NSInteger, TalkCellType) {
 @property (nonatomic, strong) UIImageView *vBubble;
 @property (nonatomic, strong) TPMessageBubbleImage *msgBubbleImage;
 
+@property (nonatomic, strong) UIImageView *vHead;
+
+
 - (instancetype)initWithType:(TalkCellType)type talkCellContentType:(NSString *)talkCellContentType;
 
 @end

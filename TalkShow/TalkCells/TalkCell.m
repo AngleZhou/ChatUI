@@ -25,31 +25,44 @@
         self.vBubble = [[UIImageView alloc] init];
         [self addSubview:self.vBubble];
         
+        self.vHead = [[UIImageView alloc] init];
+        [self addSubview:self.vHead];
+        self.vHead.image = [UIImage imageNamed:@"head_default"];
+        
         ______WS();
         TPMessageBubble *msgBubble = [[TPMessageBubble alloc] init];
         switch (type) {
-            case TalkCellTypeReceived:
+            case TalkCellTypeReceived://左边
             {
+                [self.vHead mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
+                    make.leading.equalTo(wSelf).with.offset(kTSSideX);
+                    make.size.mas_equalTo(CGSizeMake(44, 44));
+                }];
+                
                 self.msgBubbleImage = [msgBubble tpMsgReceivedBubble];
                 self.vBubble.image = self.msgBubbleImage.image;
                 [self.vBubble mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
-                    make.leading.equalTo(wSelf).with.offset(kTSSideX);
+                    make.leading.equalTo(wSelf.vHead.mas_trailing).with.offset(8);
                     make.size.mas_equalTo(CGSizeMake(44, 44));
-//                    make.trailing.equalTo(wSelf.vContent).with.offset(kTSBubbleTextXMargin);
-                    
                 }];
+                
             }
                 break;
-            case TalkCellTypeSend:
+            case TalkCellTypeSend://右边
             {
+                [self.vHead mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
+                    make.trailing.equalTo(wSelf).with.offset(-kTSSideX);
+                    make.size.mas_equalTo(CGSizeMake(44, 44));
+                }];
                 self.msgBubbleImage = [msgBubble tpMsgSendBubble];
                 self.vBubble.image = self.msgBubbleImage.image;
                 [self.vBubble mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.equalTo(wSelf).with.offset(kTSBubbleTextYMargin);
-                    make.trailing.equalTo(wSelf).with.offset(-kTSSideX);
+                    make.trailing.equalTo(wSelf.vHead.mas_leading).with.offset(-8);
                     make.size.mas_equalTo(CGSizeMake(44, 44));
-//                    make.leading.equalTo(wSelf.vContent).with.offset(-kTSBubbleTextXMargin);
                 }];
             }
                 break;

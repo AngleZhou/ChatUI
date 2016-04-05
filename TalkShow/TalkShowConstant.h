@@ -10,7 +10,7 @@
 #define Constant_h
 
 
-#define kTSSideX 8
+#define kTSSideX 16
 #define kTSBubbleHeight 40
 #define kTSBubbleTextXMargin 10
 #define kTSBubbleTextYMargin 12
