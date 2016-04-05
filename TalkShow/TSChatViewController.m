@@ -243,6 +243,8 @@
     if (![self.textView isFirstResponder]) {
         [UIView animateWithDuration:0.3 animations:^{
             wSelf.toolBar.top = kTSScreenHeight - wSelf.toolBar.height;
+            wSelf.emojiView.top = kTSScreenHeight;
+            wSelf.inputPlugInView.top = kTSScreenHeight;
         }];
     }
     
