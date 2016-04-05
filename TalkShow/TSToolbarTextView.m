@@ -136,6 +136,7 @@
         self.startPoint = [touch locationInView:vMain];
         
         [self highlightedState];
+        
         if ([[TSAudioUtils sharedInstance] record]) {
             [self initTimerTouch];
             [self initTimerVolume];

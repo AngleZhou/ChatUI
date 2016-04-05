@@ -41,16 +41,14 @@ static long audioCount = 0;
 
 - (BOOL)initAudio {
     AVAudioSession *session = [AVAudioSession sharedInstance];
-    if ([TSAuthentication canRecord]) {
-        NSError *error;
-        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
-        if (error) {
-            NSLog(@"AVAudioSession setCategory error: %@", [error localizedDescription]);
-            return NO;
-        }
-        return YES;
+    NSError *error;
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&error];
+    
+    if (error) {
+        NSLog(@"AVAudioSession setCategory error: %@", [error localizedDescription]);
+        return NO;
     }
-    return NO;
+    return YES;
 }
 
 
@@ -58,34 +56,37 @@ static long audioCount = 0;
 
 - (BOOL)record {
     if ([self initAudio]) {
-        audioCount++;
-        self.fileURL = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
-        //define the recorder setting
-        NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),
-                                                AVSampleRateKey : @(44100.0),
-                                                AVNumberOfChannelsKey : @2} mutableCopy];
-        if (self.recorder) {
-            [self.recorder stop];
-            self.recorder = nil;
+        if ([TSAuthentication canRecord]) {
+            audioCount++;
+            self.fileURL = [TSSave audioFileUrlWithFileName:[NSString stringWithFormat:@"audio%ld.m4a", (long)audioCount]];
+            //define the recorder setting
+            NSMutableDictionary *recordSetting = [@{AVFormatIDKey : @(kAudioFormatMPEG4AAC),
+                                                    AVSampleRateKey : @(44100.0),
+                                                    AVNumberOfChannelsKey : @2} mutableCopy];
+            if (self.recorder) {
+                [self.recorder stop];
+                self.recorder = nil;
+            }
+            if (self.player) {
+                [self.player stop];
+                self.player = nil;
+            }
+            self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
+            self.recorder.delegate = self;
+            self.recorder.meteringEnabled = YES;
+            [self.recorder prepareToRecord];
+            
+            if ([self.player isPlaying]) {
+                [self.player stop];
+                NSLog(@"rate: %d", self.player.isPlaying);
+            }
+            if (![self.recorder isRecording]) {
+                NSError *error;
+                [[AVAudioSession sharedInstance] setActive:YES error:&error];
+            }
+            return [self.recorder record];
         }
-        if (self.player) {
-            [self.player stop];
-            self.player = nil;
-        }
-        self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSetting error:nil];
-        self.recorder.delegate = self;
-        self.recorder.meteringEnabled = YES;
-        [self.recorder prepareToRecord];
-        
-        if ([self.player isPlaying]) {
-            [self.player stop];
-            NSLog(@"rate: %d", self.player.isPlaying);
-        }
-        if (![self.recorder isRecording]) {
-            NSError *error;
-            [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        }
-        return [self.recorder record];
+        return NO;
     }
     
     return NO;
@@ -135,49 +136,13 @@ static long audioCount = 0;
 #if TARGET_IPHONE_SIMULATOR
     return NO;
 #endif
-    
-    CFStringRef route;
-    UInt32 propertySize = sizeof(CFStringRef);
-    AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &propertySize, &route);
-    
-    BOOL hasHeadset = NO;
-    if((route == NULL) || (CFStringGetLength(route) == 0))
-    {
-        // Silent Mode
+    AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
+    for (AVAudioSessionPortDescription* desc in [route outputs]) {
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+            return YES;
     }
-    else
-    {
-        /* Known values of route:
-         * "Headset"
-         * "Headphone"
-         * "Speaker"
-         * "SpeakerAndMicrophone"
-         * "HeadphonesAndMicrophone"
-         * "HeadsetInOut"
-         * "ReceiverAndMicrophone"
-         * "Lineout"
-         */
-        NSString* routeStr = (__bridge NSString*)route;
-        NSRange headphoneRange = [routeStr rangeOfString : @"Headphone"];
-        NSRange headsetRange = [routeStr rangeOfString : @"Headset"];
-        
-        if (headphoneRange.location != NSNotFound)
-        {
-            hasHeadset = YES;
-        }
-        else if(headsetRange.location != NSNotFound)
-        {
-            hasHeadset = YES;
-        }
-    }
-    
-    if (route)
-    {
-        CFRelease(route);
-    }
-    
-    return hasHeadset;
-} 
+    return NO;
+}
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
     NSLog(@"%d, %d", player.isPlaying, flag);

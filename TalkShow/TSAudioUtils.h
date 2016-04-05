@@ -23,4 +23,6 @@
 - (NSURL *)filePath;
 
 - (AVAudioPlayer *)playerWithUrl:(NSURL *)url;
+
++ (BOOL)usingHeadset;
 @end
