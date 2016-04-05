@@ -42,8 +42,15 @@
     };
     [plugins addObject:photo];
     
+    //位置
+    TSInputPluginItem *location = [[TSInputPluginItem alloc] init];
+    location.name = @"位置";
+    location.image = [UIImage imageNamed:@"actionbar_location_icon"];
+    location.action = ^{
+        
+    };
+    [plugins addObject:location];
     
-
     return [plugins copy];
 }
 @end

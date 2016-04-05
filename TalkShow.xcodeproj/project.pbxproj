@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7A0C6E31871926B28E3954C8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 431D31B697FB769741A64B18 /* libPods.a */; };
+		B22A20E71CB362120012123D /* TSLocationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B22A20E61CB362120012123D /* TSLocationVC.m */; };
 		B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801631C8029AF000A60A5 /* TSInputPluginCell.m */; };
 		B23801A61C80393C000A60A5 /* TSInputPluginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801A51C80393C000A60A5 /* TSInputPluginModel.m */; };
 		B23801A91C803B1D000A60A5 /* TSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801A81C803B1D000A60A5 /* TSTools.m */; };
@@ -69,6 +70,8 @@
 		431D31B697FB769741A64B18 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4406F112A78AE6E18E168758 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		6712E006F0827B861F64486A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		B22A20E51CB362120012123D /* TSLocationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSLocationVC.h; path = InputView/Model/TSLocationVC.h; sourceTree = "<group>"; };
+		B22A20E61CB362120012123D /* TSLocationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSLocationVC.m; path = InputView/Model/TSLocationVC.m; sourceTree = "<group>"; };
 		B23801621C8029AF000A60A5 /* TSInputPluginCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSInputPluginCell.h; sourceTree = "<group>"; };
 		B23801631C8029AF000A60A5 /* TSInputPluginCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSInputPluginCell.m; sourceTree = "<group>"; };
 		B23801A41C80393C000A60A5 /* TSInputPluginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSInputPluginModel.h; sourceTree = "<group>"; };
@@ -334,6 +337,8 @@
 			children = (
 				B2EFB9F61C8574260022CA81 /* TSImagePicker.h */,
 				B2EFB9F71C8574260022CA81 /* TSImagePicker.m */,
+				B22A20E51CB362120012123D /* TSLocationVC.h */,
+				B22A20E61CB362120012123D /* TSLocationVC.m */,
 			);
 			name = PluginsOfInput;
 			sourceTree = "<group>";
@@ -573,6 +578,7 @@
 			files = (
 				B23801A91C803B1D000A60A5 /* TSTools.m in Sources */,
 				B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */,
+				B22A20E71CB362120012123D /* TSLocationVC.m in Sources */,
 				B2C466B51C9FC75B0039C43E /* TSAuthentication.m in Sources */,
 				B2EFB9FC1C85B6990022CA81 /* TSTextCell.m in Sources */,
 				B2FFB96A1C74A75600F67FF7 /* ViewUtils.m in Sources */,
