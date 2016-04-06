@@ -38,5 +38,12 @@
 	<array>
 		<string>iconfont.ttf</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>聊天时分享位置信息功能需要获取你的位置信息</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

@@ -9,6 +9,7 @@
 #import "TSInputPluginModel.h"
 #import "TSImagePicker.h"
 #import "TSSave.h"
+#import "TSLocationVC.h"
 
 @implementation TSInputPluginItem
 
@@ -43,11 +44,13 @@
     [plugins addObject:photo];
     
     //位置
+    TSLocationVC *lvc = [[TSLocationVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:lvc];
     TSInputPluginItem *location = [[TSInputPluginItem alloc] init];
     location.name = @"位置";
     location.image = [UIImage imageNamed:@"actionbar_location_icon"];
     location.action = ^{
-        
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
     };
     [plugins addObject:location];
     

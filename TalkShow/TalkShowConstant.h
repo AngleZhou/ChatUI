@@ -24,6 +24,7 @@
 
 #define kTSInputPluginTextColor [UIColor grayColor]
 #define kTSInputPluginViewBGColor [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
+#define kTSTintColor [UIColor colorWithRed:0/255.0 green:122/255.0 blue:255/255.0 alpha:1]
 
 #define toolBarMinHeight 50
 
@@ -36,7 +37,7 @@
 #define kTSHEIGHT6 667
 #define kTSHEIGHT6S 736
 
-
+#define QQMapKey @"X6HBZ-Q4H3X-2LF4L-ZOYG3-7QWTH-INFLA"
 
 #define ______WS() __weak __typeof(&*self) wSelf = self
 #define ______SS() __weak __typeof(&*wSelf) sSelf = wSelf
@@ -47,6 +48,7 @@
 #define kTSFontRemark [UIFont systemFontOfSize:13]
 #define kTSFontRemarkBold [UIFont boldSystemFontOfSize:13]
 #define kTSFontEmoji [UIFont systemFontOfSize:33]
+#define  kTSFontTip [UIFont systemFontOfSize:11]
 
 static NSString *SENDCELL = @"SendCell";
 static NSString *RECEIVECELL = @"ReceiveCell";
