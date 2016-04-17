@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface TSLocationCell : UITableViewCell
-@property (nonatomic, strong, nonnull) NSString *title;
-@property (nonatomic, strong, nullable) NSString *subTitle;
+@property (nonatomic, strong, nonnull, readonly) NSString *title;
+@property (nonatomic, strong, nullable, readonly) NSString *subTitle;
 @property (nonatomic) BOOL bChecked;
+
+- (void)setTitle:(NSString *)title subTitle:(NSString *)subTitle;
 @end

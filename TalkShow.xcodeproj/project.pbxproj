@@ -16,6 +16,7 @@
 		B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801631C8029AF000A60A5 /* TSInputPluginCell.m */; };
 		B23801A61C80393C000A60A5 /* TSInputPluginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801A51C80393C000A60A5 /* TSInputPluginModel.m */; };
 		B23801A91C803B1D000A60A5 /* TSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = B23801A81C803B1D000A60A5 /* TSTools.m */; };
+		B23936EB1CC383D6002D3809 /* TSCurrentLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B23936EA1CC383D6002D3809 /* TSCurrentLocation.m */; };
 		B24FAEA71C76EDD100B8F523 /* UIColor+DarkerLighter.m in Sources */ = {isa = PBXBuildFile; fileRef = B24FAEA61C76EDD100B8F523 /* UIColor+DarkerLighter.m */; };
 		B24FAEB01C773CBC00B8F523 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = B24FAEAF1C773CBC00B8F523 /* Emoji.plist */; };
 		B24FAEB41C77474D00B8F523 /* TSMultiInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B24FAEB31C77474D00B8F523 /* TSMultiInputView.m */; };
@@ -89,6 +90,8 @@
 		B23801A51C80393C000A60A5 /* TSInputPluginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSInputPluginModel.m; sourceTree = "<group>"; };
 		B23801A71C803B1D000A60A5 /* TSTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTools.h; sourceTree = "<group>"; };
 		B23801A81C803B1D000A60A5 /* TSTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTools.m; sourceTree = "<group>"; };
+		B23936E91CC383D6002D3809 /* TSCurrentLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSCurrentLocation.h; sourceTree = "<group>"; };
+		B23936EA1CC383D6002D3809 /* TSCurrentLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSCurrentLocation.m; sourceTree = "<group>"; };
 		B24FAEA51C76EDD100B8F523 /* UIColor+DarkerLighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+DarkerLighter.h"; path = "TPMessageBubble/UIColor+DarkerLighter.h"; sourceTree = "<group>"; };
 		B24FAEA61C76EDD100B8F523 /* UIColor+DarkerLighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+DarkerLighter.m"; path = "TPMessageBubble/UIColor+DarkerLighter.m"; sourceTree = "<group>"; };
 		B24FAEAF1C773CBC00B8F523 /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = ../Emoji.plist; sourceTree = "<group>"; };
@@ -208,6 +211,8 @@
 				B2EFB9F71C8574260022CA81 /* TSImagePicker.m */,
 				B22A20E51CB362120012123D /* TSLocationVC.h */,
 				B22A20E61CB362120012123D /* TSLocationVC.m */,
+				B23936E91CC383D6002D3809 /* TSCurrentLocation.h */,
+				B23936EA1CC383D6002D3809 /* TSCurrentLocation.m */,
 				B22A21271CB3A2740012123D /* TSAnnotation.h */,
 				B22A21281CB3A2740012123D /* TSAnnotation.m */,
 			);
@@ -606,6 +611,7 @@
 				B253DE0D1C8935D10027B2D7 /* UIView+ToImage.m in Sources */,
 				B2BFB5CF1C72BF54000B6C82 /* TSChatViewController.m in Sources */,
 				B2A167781C75C19700B899B8 /* NSDate+MessgeCellDescription.m in Sources */,
+				B23936EB1CC383D6002D3809 /* TSCurrentLocation.m in Sources */,
 				B23801641C8029AF000A60A5 /* TSInputPluginCell.m in Sources */,
 				B2EFB9FF1C85C19E0022CA81 /* TSVoiceCell.m in Sources */,
 				B253DE5B1C89744E0027B2D7 /* SFTag.m in Sources */,
@@ -783,7 +789,7 @@
 				);
 				INFOPLIST_FILE = TalkShow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = angle.TalkShow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cuibin.dingdone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)";
 			};
@@ -810,7 +816,7 @@
 				);
 				INFOPLIST_FILE = TalkShow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = angle.TalkShow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cuibin.dingdone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)";
 			};

@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface TSLocationVC : UIViewController
-
+@property (nonatomic) CLLocationCoordinate2D coordinate;
 @end

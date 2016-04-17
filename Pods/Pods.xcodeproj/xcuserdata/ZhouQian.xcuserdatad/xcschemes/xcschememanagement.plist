@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>INTULocationManager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>JZLocationConverter.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,7 +37,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>51C875228E91910E0A100630DA35C632</key>
+		<key>301B6B380522FD407E6D83923C0DC939</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -37,7 +47,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B46E8E3803E0DE03B02F6A6CF12E0D63</key>
+		<key>6D5158554CD07F967BBC22B2CC13044B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DB9AEFE9468D4777182AE9E08BA4AC26</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E07A1B93D0B5E99C6E979FACDA81D9B4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

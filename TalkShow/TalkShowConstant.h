@@ -26,6 +26,14 @@
 #define kTSInputPluginViewBGColor [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
 #define kTSTintColor [UIColor colorWithRed:0/255.0 green:122/255.0 blue:255/255.0 alpha:1]
 
+
+//其他颜色：线条，不可用等
+#define HEXCOLORA(rgbValue, a) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16)) / 255.0 green:((float)((rgbValue & 0xFF00) >> 8)) / 255.0 blue:((float)(rgbValue & 0xFF)) / 255.0 alpha:a]
+#define HEXCOLOR(rgbValue) HEXCOLORA(rgbValue, 1.0)
+#define CTColorOther       HEXCOLOR(0xded8d7)
+
+
+
 #define toolBarMinHeight 50
 
 #define kTSScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -49,6 +57,8 @@
 #define kTSFontRemarkBold [UIFont boldSystemFontOfSize:13]
 #define kTSFontEmoji [UIFont systemFontOfSize:33]
 #define  kTSFontTip [UIFont systemFontOfSize:11]
+
+#define amap_key        @"8a39b68b5d02c8ff4b7cd5595644f8cd"
 
 static NSString *SENDCELL = @"SendCell";
 static NSString *RECEIVECELL = @"ReceiveCell";
